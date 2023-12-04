@@ -1,0 +1,79 @@
+body {
+  background-image: url(../img/fondo_ini\ 1.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  font-family: "Times New Roman", serif;
+
+
+}
+
+/* Media query para ajustar la imagen en pantallas más pequeñas */
+@media only screen and (max-width: 768px) {
+  body {
+      background-size: contain;
+  }
+}
+
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 20px;
+  border-radius: 32px;
+  width: 30%;
+  max-width: 800px; /* Modifica el ancho máximo para pantallas más grandes */
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 95%;
+  }
+}
+
+
+
+.btn_ing {
+    background: linear-gradient(to right, #28503C, #62DC9F);
+    color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+
+h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.form-control {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color:rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    
+}
+
+
+  
+

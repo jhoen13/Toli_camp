@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Formulario de Validacion</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/stylelo.css">
+    <link href="../../assets/img/logo.png" rel="icon">
+</head>
+
+<body onload="form1.doc.focus()">
+    <div class="container mt-5"> 
+            <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
+                <a href="login.php" style="color: #000000;" class="d-flex align-items-center">
+                  <i class="fas fa-arrow-left mr-2 fa-2x"></i> 
+                </a>
+                </button>
+                <br>
+            <h2>VALIDACIÒN DE DATOS</h2><br>
+            <form method="POST" name="form1" autocomplete="off" action="nueva_clave.php">
+                <div class="form-group">
+                    <label for="doc">Documento</label>
+                    <input type="number" name="doc" id="doc" class="form-control" placeholder="Digite Numero de Documento"
+                        required>
+                </div>
+            
+                <script>
+                    // Obtenemos el campo del documento
+                    const docInput = document.getElementById("doc");
+            
+                    // Agregamos un evento para escuchar el cambio en el campo
+                    docInput.addEventListener("input", function () {
+                        // Obtenemos el valor actual del campo
+                        const value = docInput.value;
+            
+                        // Verificamos si el valor contiene solo números y si tiene máximo diez caracteres
+                        if (/^\d+$/.test(value) && value.length <= 10) {
+                            // El valor es válido, eliminamos cualquier mensaje de error
+                            docInput.setCustomValidity("");
+                        } else {
+                            // El valor es inválido, mostramos un mensaje de error
+                            docInput.setCustomValidity("El documento debe contener solo números y tener máximo diez caracteres.");
+                        }
+                    });
+                </script>
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" name="usuario" id="usuario" class="form-control"
+                        placeholder="Digite el usuario" required>
+                </div><br>
+                <div style="  text-align: center;">
+                    <input type="submit" name="inicio" id="inicio" value="Validar" class="btn_ing">
+                    <input type="hidden" name="MM_vali" value="form2">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
