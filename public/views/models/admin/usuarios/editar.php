@@ -32,7 +32,7 @@ $tiposDocumento = $consultaTipDocu->fetchAll(PDO::FETCH_ASSOC);
 // Crear el mapa de tipos de documento
 $documentoMap = [];
 foreach ($tiposDocumento as $tipoDocumento) {
-    $documentoMap[$tipoDocumento['id_tipdocu']] = $tipoDocumento['tipoocu'];
+    $documentoMap[$tipoDocumento['id_tipdocu']] = $tipoDocumento['tipdocu'];
 }
 
 // BOTON DE ACTUALIZACIÓN EL CUAL VIENE DE UN BUTTON, VALUE DEL FORMULARIO
@@ -94,7 +94,7 @@ if (isset($_POST["btn-actualizar"])) {
 <body>
     <div class="container mt-5">
         <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;">
-            <a href="../../../index.html" style="color: #000000;" class="d-flex align-items-center">
+            <a href="./index.php" style="color: #000000;" class="d-flex align-items-center">
                 <i class="fas fa-arrow-left mr-2 fa-2x"></i>
             </a>
         </button>
@@ -169,7 +169,7 @@ if (isset($_POST["btn-actualizar"])) {
                         <option value="" disabled>Seleccione tipo de documento</option>
                         <?php foreach ($tiposDocumento as $tipoDocumento) : ?>
                             <option value="<?= $tipoDocumento['id_tipdocu'] ?>" <?= ($tipoDocumento['id_tipdocu'] == $datosUsuario['id_tipdocu']) ? 'selected' : '' ?>>
-                                <?= $tipoDocumento['tipoocu'] ?>
+                                <?= $tipoDocumento['tipdocu'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

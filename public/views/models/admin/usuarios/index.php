@@ -128,6 +128,27 @@ foreach ($estado as $estad) {
     <!-- Custom Stylesheet -->
     <link href="../../../../../vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
     <link href="../../../../../css/style.css" rel="stylesheet">
+
+    <style>
+        /* ocultar texto de los icono */
+        .icon {
+            display: inline;
+        }
+
+        .text {
+            display: none;
+        }
+
+        .btn:hover .icon {
+            display: none;
+        }
+
+        .btn:hover .text {
+            display: inline;
+        }
+
+        /* end ocultar texto de icono */
+    </style>
 </head>
 
 <body class="con" style="font-family: 'Times New Roman', Times, serif;">
@@ -266,14 +287,14 @@ foreach ($estado as $estad) {
             <div class="dlabnav-scroll">
                 <ul class="metismenu" id="menu">
                     <li>
-                        <a class="has-arrow " href="./index-admin.php" aria-expanded="false">
+                        <a class="has-arrow " href="../index-admin.php" aria-expanded="false">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">HOME</span>
                         </a>
                     </li>
                     <!-- MODULO PARA VER PERFIL -->
                     <li>
-                        <a class="has-arrow " href="./perfil.php" aria-expanded="false">
+                        <a class="has-arrow " href="../perfil.php" aria-expanded="false">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">PERFIL</span>
                         </a>
@@ -286,8 +307,8 @@ foreach ($estado as $estad) {
                         </a>
                         <ul aria-expanded="false">
                             <!-- MODULO PARA ENLISTAR O CREAR UN ADMINISTRADOR -->
-                            <li><a href="./usuarios/index.php">Listar Usuarios</a></li>
-                            <li><a href="./usuarios/crear.php">Crear Usuarios</a></li>
+                            <li><a href="./index.php">Listar Usuarios</a></li>
+                            <li><a href="./crear.php">Crear Usuarios</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE CATEGORIAS -->
@@ -297,8 +318,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">CATEGORIAS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./categoria/index.php">Lista Categorias</a></li>
-                            <li><a href="./categoria/crear.php">crear Categorias</a></li>
+                            <li><a href="../categoria/index.php">Lista Categorias</a></li>
+                            <li><a href="../categoria/crear.php">crear Categorias</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE DOCUMENTOS -->
@@ -307,8 +328,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">DOCUMENTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./documentos/index.php">Lista Documentos</a></li>
-                            <li><a href="./documentos/crear.php">crear Documentos</a></li>
+                            <li><a href="../documentos/index.php">Lista Documentos</a></li>
+                            <li><a href="../documentos/crear.php">crear Documentos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE EMBALAJE -->
@@ -317,8 +338,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">EMBALAJE</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./embalaje/index.php">Listar Embalaje</a></li>
-                            <li><a href="./embalaje/crear.php">crear Embalaje</a></li>
+                            <li><a href="../embalaje/index.php">Listar Embalaje</a></li>
+                            <li><a href="../embalaje/crear.php">crear Embalaje</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE GENEROS -->
@@ -327,8 +348,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">GENEROS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./genero/index.php">Listar Generos</a></li>
-                            <li><a href="./genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/index.php">Listar Generos</a></li>
+                            <li><a href="../genero/crear.php">crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -337,8 +358,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./producto/producto.php">Listar Productos</a></li>
-                            <li><a href="./producto/crear.php">crear Productos</a></li>
+                            <li><a href="../producto/producto.php">Listar Productos</a></li>
+                            <li><a href="../producto/crear.php">crear Productos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ROLES -->
@@ -348,8 +369,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">ROLES</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./roles/index.php">Listar Roles</a></li>
-                            <li><a href="./roles/crear.php">crear Roles</a></li>
+                            <li><a href="../roles/index.php">Listar Roles</a></li>
+                            <li><a href="../roles/crear.php">crear Roles</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ESTADISTICAS -->
@@ -358,8 +379,8 @@ foreach ($estado as $estad) {
                             <span class="nav-text">ESTADISTICAS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="index.html">Partidas</a></li>
-                            <li><a href="index.html">Usuarios Bloqueados</a></li>
+                            <li><a href="#">Partidas</a></li>
+                            <li><a href="#">Usuarios Bloqueados</a></li>
                         </ul>
 
                     </li>
@@ -391,21 +412,21 @@ foreach ($estado as $estad) {
                     </ol>
                 </div>
                 <div class="row">
-                    <!-- CONTENIDO TABLA DE INGRESO -->
+                    <!-- CONTENIDO TABLA DE USUARIOS -->
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Actividad</h4>
                             </div>
                             <div class="card-body">
-                                <div class="row" style="font-size: 50px;">
-                                    <a href="./crear.php" class="btn btn-margin col" style="background-color: #67DC9F; color:#ffff;">Crear un usuario</a>
-                                    <a href="../index-admin.php" class="btn btn-primary btn-margin col">Volver</a>
+                                <div class="row" style="font-size: 25px;">
+                                    <a href="./crear.php" class="btn btn-margin col-4" style="background-color: #67DC9F; color:#ffff;">Crear un usuario</a><br>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="example3" class="display" style="min-width: 845px">
+                                    <table id="example3" class="display text-center" style="min-width: 845px">
                                         <thead>
                                             <tr>
+                                                <th scope="col">Foto</th>
                                                 <th scope="col">Documento</th>
                                                 <th scope="col">Nombre</th>
                                                 <th scope="col">Apellido</th>
@@ -416,12 +437,13 @@ foreach ($estado as $estad) {
                                                 <th scope="col">Estado</th>
                                                 <th scope="col">Rol</th>
                                                 <th scope="col">Tipo de documento</th>
-                                                <th colspan="2">Acciones</th>
+                                                <th colspan="4">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($user as $use) { ?>
                                                 <tr>
+                                                    <td><?php echo $use['foto']; ?></td>
                                                     <td><?php echo $use['documento']; ?></td>
                                                     <td><?php echo $use['nombre']; ?></td>
                                                     <td><?php echo $use['apellido']; ?></td>
@@ -439,12 +461,17 @@ foreach ($estado as $estad) {
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        if (isset($use['id_estado']) && isset($estadoMap[$use['id_estado']])) {
-                                                            echo $estadoMap[$use['id_estado']];
-                                                        } else {
-                                                        }
+                                                        $estado = isset($use['id_estado']) && isset($estadoMap[$use['id_estado']]) ? $estadoMap[$use['id_estado']] : 'Estado no especificado';
+                                                        $colorClass = $use['id_estado'] == 1 ? 'badge-success' : 'badge-danger';
+                                                        $iconClass = $use['id_estado'] == 1 ? 'fa-check-circle' : 'fa-times-circle';
+                                                        $text = $use['id_estado'] == 1 ? 'ACTIVO' : 'INACTIVO';
                                                         ?>
+                                                        <span class="badge light <?php echo $colorClass; ?>">
+                                                            <i class="fa <?php echo 'fa-circle text-' . ($use['id_estado'] == 1 ? 'success' : 'danger') . ' me-1'; ?>"></i>
+                                                            <?php echo $text; ?>
+                                                        </span>
                                                     </td>
+
                                                     <td>
                                                         <?php
                                                         if (isset($use['id_rol']) && isset($rolesMap[$use['id_rol']])) {
@@ -462,14 +489,31 @@ foreach ($estado as $estad) {
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?> " class="btn btn-success btn-margin">Editar</a>
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#c4dafa;" onclick="return confirm('¿Está seguro de Activar este usuario?')">
+                                                            <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                                                            <span class="text">ACTIVAR</span>
+                                                        </a>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-danger btn-margin">Eliminar</a>
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#0C7EF7;" onclick="return confirm('¿Está seguro de desactivar este usuario?')">
+                                                            <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                                                            <span class="text">DESACTIVAR</span>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-success shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de actualizar este paciente?')">
+                                                            <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                                                            <span class="text">Actualizar</span>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-danger shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de eliminar este paciente?')">
+                                                            <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                                                            <span class="text">Eliminar</span>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
-
                                         </tbody>
                                     </table>
                                 </div>
