@@ -18046,8 +18046,8 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 }
 
 .dlabnav .metismenu>li.mm-active>a:after {
-  border-top: 0.3125rem solid #63DC9F;
-  border-left: 0.3125rem solid #63DC9F;
+  border-top: 0.3125rem solid #0097B2;
+  border-left: 0.3125rem solid #0097B2;
 }
 
 [data-sidebar-style="compact"] .dlabnav .metismenu>li.mm-active>a i {
@@ -21614,7 +21614,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   z-index: 9;
   top: 21.75rem;
   right: 100%;
-  background-color: #627EEA;
+  background-color: #63DC9F;
   color: #fff;
   display: inline-block;
   height: 3rem;
