@@ -36,7 +36,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $precio_ven = $_POST['precio_ven'];
     $documento = $_POST['documento'];
 
-     if (!empty($_FILES['foto']['name'])) {
+    if (!empty($_FILES['foto']['name'])) {
         $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
         $nombre = "producto_" . time();
         $foto_nombre = $nombre . "." . $extension;
@@ -69,12 +69,13 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $updatesql->execute();
 
     echo '<script>alert("Actualización Exitosa");</script>';
-    echo '<script> window.location="producto.php"</script>';
+    echo '<script> window.location="./producto.php"</script>';
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,13 +83,14 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <link rel="shortcut icon" href="../../../controller/img/icono.png" type="image/x-icon">
     <title>Formulario de creación de partidas</title>
 </head>
+
 <body>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden=true" times="" ></span>
+                    <span aria-hidden=true" times=""></span>
                 </button>
             </div>
             <form action="" method="post" enctype="multipart/form-data">
@@ -129,8 +131,12 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="">
                     <label for="imagen">Imagen:</label>
+                    <img src="../../../../assets/img/img_produc/<?= $producto["foto"] ?>" alt="foto del producto" style="width: 145px; border-radius: 40px;">
+                </div>
+                <div class="form-group">
+                    <label for="imagen">Actualizar magen:</label>
                     <input type="file" class="form-control-file" id="foto" name="foto" accept="image/*">
                 </div>
                 <div class="modal-body">
@@ -155,4 +161,5 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

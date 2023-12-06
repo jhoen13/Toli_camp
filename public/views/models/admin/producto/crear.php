@@ -49,9 +49,9 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $validar->execute();
     $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($nom_produc == "") {
+    if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $disponibles == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto_nombre == "" || $precio_ven == "" || $documento == "") {
         echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
-        echo '<script> window.location="producto.php"</script>';
+        echo '<script> window.location="./crear.php"</script>';
     } else {
         $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,disponibles,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra', '$disponibles','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
         $insertsql->execute();
@@ -63,6 +63,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,6 +71,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <link rel="shortcut icon" href="../../../controller/img/icono.png" type="image/x-icon">
     <title>Formulario de creación de productos</title>
 </head>
+
 <body>
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,4 +142,5 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
         </div>
     </div>
 </body>
+
 </html>

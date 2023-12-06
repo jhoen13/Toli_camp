@@ -49,8 +49,23 @@ if (isset($_POST["btn-actualizar"])) {
     $estado = $_POST['id_estado'];
     $id_tipdocu = $_POST['id_tipdocu'];
 
+    // Verifica si se ha enviado un archivo y la guarda en la carpeta img_user
+    if (!empty($_FILES['foto']['name'])) {
+        $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+        $nom = "usuario_" . time();
+        $foto_nombre = $nom . "." . $extension;
+        $ruta_destino = "../../../../assets/img/img_user/$foto_nombre";
+
+        // Mueve el archivo a la ruta de destino
+        move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
+    } else {
+        // Si no se envió un archivo, muestra un mensaje de error y redirige
+        echo '<script>alert("No se ha seleccionado una imagen"); window.location="./index.php"</script>';
+        exit(); // Detiene la ejecución del script
+    }
+
     // Consulta de actualización
-    $consultaActualizar = $con->prepare("UPDATE usuarios SET nombre = :nombre, apellido = :apellido, correo_electronico = :email, celular = :celular, direccion = :direccion, id_genero = :genero, id_rol = :rol, id_estado = :estado, id_tipdocu = :id_tipdocu WHERE documento = :documento");
+    $consultaActualizar = $con->prepare("UPDATE usuarios SET nombre = :nombre, apellido = :apellido, correo_electronico = :email, celular = :celular, direccion = :direccion, id_genero = :genero, id_rol = :rol, id_estado = :estado, id_tipdocu = :id_tipdocu, foto = :foto WHERE documento = :documento");
 
     // Bind de parámetros
     $consultaActualizar->bindParam(':nombre', $nombre);
@@ -62,12 +77,13 @@ if (isset($_POST["btn-actualizar"])) {
     $consultaActualizar->bindParam(':rol', $rol);
     $consultaActualizar->bindParam(':estado', $estado);
     $consultaActualizar->bindParam(':id_tipdocu', $id_tipdocu);
+    $consultaActualizar->bindParam(':foto', $foto_nombre);
     $consultaActualizar->bindParam(':documento', $documento_a_actualizar);
 
     // Ejecutar la consulta
     if ($consultaActualizar->execute()) {
         echo '<script>alert("Actualización exitosa.");</script>';
-        echo '<script>window.location="index.php"</script>';
+        echo '<script>window.location="./index.php"</script>';
     } else {
         echo '<script>alert("Error al actualizar. Por favor, inténtalo de nuevo.");</script>';
     }
@@ -174,12 +190,20 @@ if (isset($_POST["btn-actualizar"])) {
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <!-- Se muestra la imagen que el usuario guardo desde la carpeta establecida -->
+                <div class="col">
+                    <label for="imagen">Imagen:</label>
+                    <img src="../../../../assets/img/img_user/<?= $datosUsuario["foto"] ?>" alt="foto de perfil de usuario" style="width: 145px; border-radius: 40px;">
+                </div>
+                <!-- Actualizacion de imagen -->
+                <div class="col">
+                    <label for="imagen">Actualizar imagen:</label>
+                    <input type="file" class="form-control-file" id="foto" name="foto" accept="image/*">
+                </div>
 
                 <input type="hidden" class="form-control form-control-lg" value="<?= $datosUsuario['id_estado'] ?>" name="id_estado">
             </div>
-
             <button type="submit" value="actualizar" name="btn-actualizar" class="btn_ing">ACTUALIZAR</button>
-            <a class="volver" href="index.php">Volver</a><br>
         </form>
     </div>
 

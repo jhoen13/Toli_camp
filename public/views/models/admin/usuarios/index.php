@@ -217,7 +217,7 @@ foreach ($estado as $estad) {
                                                     <li>
                                                         <div class="timeline-panel">
                                                             <div class="media me-2">
-                                                                <img alt="image" width="50" src="../../../assets/img/img_user/<?= $entrada["foto"] ?>">
+                                                                <img alt="image" width="50" src="../../../../assets/img/img_user/<?= $entrada["foto"] ?>">
                                                             </div>
                                                             <div class="media-body">
                                                                 <h6 class="mb-1"><?= $entrada['nombre'] ?></h6>
@@ -244,16 +244,16 @@ foreach ($estado as $estad) {
                                             ?>
                                         </ul>
                                     </div>
-                                    <a class="all-notification" href="#ingreso">Ver todas<i class="ti-arrow-end"></i></a>
+                                    <a class="all-notification" href="../index-admin.php#ingreso">Ver todas<i class="ti-arrow-end"></i></a>
                                 </div>
                             </li>
                             <!-- INICIO PERFIL -->
                             <li class="nav-item dropdown  header-profile">
                                 <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-                                    <img src="../../../assets/img/img_user/profile-img.jpg" width="100" alt="imgagen del usuario">
+                                    <img alt="Foto perfil del usuario" width="100" src="../../../../assets/img/img_user/<?= $respuesta["foto"] ?>">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="./perfil.php" class="dropdown-item ai-icon">
+                                    <a href="../perfil.php" class="dropdown-item ai-icon">
                                         <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                             <circle cx="12" cy="7" r="4"></circle>
@@ -307,7 +307,7 @@ foreach ($estado as $estad) {
                         </a>
                         <ul aria-expanded="false">
                             <!-- MODULO PARA ENLISTAR O CREAR UN ADMINISTRADOR -->
-                            <li><a href="./index.php">Listar Usuarios</a></li>
+                            <li><a href="#">Listar Usuarios</a></li>
                             <li><a href="./crear.php">Crear Usuarios</a></li>
                         </ul>
                     </li>
@@ -427,28 +427,36 @@ foreach ($estado as $estad) {
                                         <thead>
                                             <tr>
                                                 <th scope="col">Foto</th>
+                                                <th scope="col">Tipo de<br>documento</th>
                                                 <th scope="col">Documento</th>
                                                 <th scope="col">Nombre</th>
-                                                <th scope="col">Apellido</th>
-                                                <th scope="col">Correo electrónico</th>
+                                                <th scope="col">Apellidos</th>
                                                 <th scope="col">Celular</th>
-                                                <th scope="col">Dirección</th>
+                                                <th scope="col">Correo electrónico</th>
+                                                <th scope="col" style="width: 500px">Dirección</th>
                                                 <th scope="col">Género</th>
                                                 <th scope="col">Estado</th>
                                                 <th scope="col">Rol</th>
-                                                <th scope="col">Tipo de documento</th>
                                                 <th colspan="4">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($user as $use) { ?>
                                                 <tr>
-                                                    <td><?php echo $use['foto']; ?></td>
+                                                    <td><img src="../../../../assets/img/img_user/<?= $use["foto"] ?>" alt="" style="width: 95px; border-radius: 40px;"></td>
+                                                    <td>
+                                                        <?php
+                                                        if (isset($use['id_tipdocu']) && isset($documentoMap[$use['id_tipdocu']])) {
+                                                            echo $documentoMap[$use['id_tipdocu']];
+                                                        } else {
+                                                        }
+                                                        ?>
+                                                    </td>
                                                     <td><?php echo $use['documento']; ?></td>
                                                     <td><?php echo $use['nombre']; ?></td>
                                                     <td><?php echo $use['apellido']; ?></td>
-                                                    <td><?php echo $use['correo_electronico']; ?></td>
                                                     <td><?php echo $use['celular']; ?></td>
+                                                    <td><?php echo $use['correo_electronico']; ?></td>
                                                     <td><?php echo $use['direccion']; ?></td>
                                                     <td>
                                                         <?php
@@ -481,35 +489,27 @@ foreach ($estado as $estad) {
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <?php
-                                                        if (isset($use['id_tipdocu']) && isset($documentoMap[$use['id_tipdocu']])) {
-                                                            echo $documentoMap[$use['id_tipdocu']];
-                                                        } else {
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#c4dafa;" onclick="return confirm('¿Está seguro de Activar este usuario?')">
-                                                            <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-success shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de Activar este usuario?')">
+                                                            <span class="icon"><i class="fas fa-user-check"></i></span>
                                                             <span class="text">ACTIVAR</span>
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#0C7EF7;" onclick="return confirm('¿Está seguro de desactivar este usuario?')">
-                                                            <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#FA0806; color:#fff;" onclick="return confirm('¿Está seguro de desactivar este usuario?')">
+                                                            <span class="icon"><i class="fas fa-user-lock"></i></span>
                                                             <span class="text">DESACTIVAR</span>
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-success shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de actualizar este paciente?')">
+                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E1C022; color:#fff" onclick="return confirm('¿Está seguro de actualizar este paciente?')">
                                                             <span class="icon"><i class="fas fa-pencil-alt"></i></span>
-                                                            <span class="text">Actualizar</span>
+                                                            <span class="text">ACTUALIZAR</span>
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-danger shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de eliminar este paciente?')">
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E0322A; color:#fff" onclick="return confirm('¿Está seguro de eliminar este paciente?')">
                                                             <span class="icon"><i class="fas fa-trash-alt"></i></span>
-                                                            <span class="text">Eliminar</span>
+                                                            <span class="text">ELIMINAR</span>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -536,8 +536,6 @@ foreach ($estado as $estad) {
         <!--****** Footer end ********-->
     </div>
     <!--***** Main wrapper end ********-->
-
-
 
 
     <!--**** Scripts menu, tables *******-->

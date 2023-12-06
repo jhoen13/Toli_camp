@@ -184,7 +184,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <!-- INICIO PERFIL -->
                             <li class="nav-item dropdown  header-profile">
                                 <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-                                    <img src="../../../assets/img/img_user/profile-img.jpg" width="100" alt="imgagen del usuario">
+                                    <img alt="Foto perfil del usuario" width="100" src="../../../assets/img/img_user/<?= $respuesta["foto"] ?>">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="./perfil.php" class="dropdown-item ai-icon">
@@ -352,7 +352,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <div class="profile-info">
 									<div class="profile-photo">
-										<img src="../../../assets/img/img_user/profile-img.jpg" class="img-fluid rounded-circle" alt="">
+										<img alt="Foto perfil del usuario" width="300" src="../../../assets/img/img_user/<?= $respuesta['foto'] ?>" class="img-fluid rounded-circle">
 									</div>
 									<div class="profile-details">
 										<div class="profile-name px-3 pt-2">

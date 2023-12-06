@@ -23,7 +23,7 @@ $tiposDocumento = $consultaTipDocu->fetchAll(PDO::FETCH_ASSOC);
 // Crear el mapa de tipos de documento
 $documentoMap = [];
 foreach ($tiposDocumento as $tipoDocumento) {
-    $documentoMap[$tipoDocumento['id_tipdocu']] = $tipoDocumento['tipoocu'];
+    $documentoMap[$tipoDocumento['id_tipdocu']] = $tipoDocumento['tipdocu'];
 }
 ?>
 
@@ -44,6 +44,21 @@ if (isset($_POST["btn-registrar"])) {
     $estado = $_POST['id_estado'];
     $id_tipdocu = $_POST['id_tipdocu'];
 
+    // Verifica si se ha enviado un archivo y la guarda en la carpeta img_user
+    if (!empty($_FILES['foto']['name'])) {
+        $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+        $nom = "usuario_" . time();
+        $foto_nombre = $nom . "." . $extension;
+        $ruta_destino = "../../../../assets/img/img_user/$foto_nombre";
+
+        // Mueve el archivo a la ruta de destino
+        move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
+    } else {
+        // Si no se envió un archivo, muestra un mensaje de error y redirige
+        echo '<script>alert("No se ha seleccionado una imagen"); window.location="./index.php"</script>';
+        exit(); // Detiene la ejecución del script
+    }
+
     $consultaExistencia = $con->prepare("SELECT * FROM usuarios WHERE documento= '$documento' OR correo_electronico = '$email'");
     $consultaExistencia->execute();
     $resultadoExistencia = $consultaExistencia->fetchAll();
@@ -52,15 +67,15 @@ if (isset($_POST["btn-registrar"])) {
         // SI SE CUMPLE ESTA CONSULTA ES PORQUE EL DOCUMENTO O EL EMAIL YA EXISTEN EN LA DB
         echo '<script> alert ("// Estimado Usuario, los datos ingresados ya están registrados. //");</script>';
         echo '<script>window.location="registro.php"</script>';
-    } elseif ($documento == "" || $nombre == "" || $apellido == "" || $email == "" || $pass == "" || $celular == "" || $direc == "" || $genero == "" || $rol == "" || $estado == "" || $id_tipdocu == "") {
+    } elseif ($documento == "" || $nombre == "" || $apellido == "" || $email == "" || $pass == "" || $celular == "" || $direc == "" || $genero == "" || $rol == "" || $estado == "" || $foto_nombre == "" || $id_tipdocu == "") {
         // CONDICIONAL DEPENDIENDO SI EXISTEN DATOS VACÍOS EN EL FORMULARIO 
         echo '<script> alert ("Estimado Usuario, existen datos vacíos en el formulario");</script>';
-        echo '<script>window.location="registro.php"</script>';
+        echo '<script>window.location="./crear.php"</script>';
     } else {
         // HASH DE LA PASSWORD, SE ENCRIPATA
         $hash_pass = password_hash($pass, PASSWORD_DEFAULT);
 
-        $consultaInsertar = $con->prepare("INSERT INTO usuarios (documento, nombre, apellido, correo_electronico, password, celular, direccion, id_genero, id_rol, id_estado, id_tipdocu) VALUES ('$documento','$nombre','$apellido','$email','$hash_pass', '$celular', '$direc', '$genero', '$rol', '$estado', '$id_tipdocu')");
+        $consultaInsertar = $con->prepare("INSERT INTO usuarios (documento, nombre, apellido, correo_electronico, password, celular, direccion, id_genero, id_rol, id_estado, foto,id_tipdocu) VALUES ('$documento','$nombre','$apellido','$email','$hash_pass', '$celular', '$direc', '$genero', '$rol', '$estado', '$foto_nombre','$id_tipdocu')");
         $consultaInsertar->execute();
         echo '<script>alert ("Registro exitoso, gracias por tu registro, ya puedes iniciar sesión.");</script>';
         echo '<script>window.location="index.php"</script>';
@@ -87,7 +102,7 @@ if (isset($_POST["btn-registrar"])) {
 <body>
     <div class="container mt-5">
         <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;">
-            <a href="../../../index.html" style="color: #000000;" class="d-flex align-items-center">
+            <a href="./index.php" style="color: #000000;" class="d-flex align-items-center">
                 <i class="fas fa-arrow-left mr-2 fa-2x"></i>
             </a>
         </button>
@@ -166,16 +181,19 @@ if (isset($_POST["btn-registrar"])) {
                     <select name="id_tipdocu" class="form-control" required>
                         <option value="" disabled selected>Seleccione tipo de documento</option>
                         <?php foreach ($tiposDocumento as $tipoDocumento) : ?>
-                            <option value="<?php echo $tipoDocumento['id_tipdocu']; ?>"><?php echo $tipoDocumento['tipoocu']; ?></option>
+                            <option value="<?php echo $tipoDocumento['id_tipdocu']; ?>"><?php echo $tipoDocumento['tipdocu']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
                 <input type="hidden" placeholder="Estado" readonly class="form-control form-control-lg input-text " value="1" name="id_estado">
-            </div>
 
+                <div class="form-group col">
+                    <label for="imagen">Imagen:</label>
+                    <input type="file" class="form-control-file" id="foto" name="foto" accept="image/*" required>
+                </div>
+            </div>
             <button type="submit" value="registrar" name="btn-registrar" class="btn_ing">REGISTRAR</button>
-            <a class="volver" href="index.php">Volver</a><br>
         </form>
     </div>
 
