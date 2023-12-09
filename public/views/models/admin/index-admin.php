@@ -386,12 +386,12 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="media-body text-white text-end">
                                         <p class="mb-1">Ventas Realizadas</p>
                                         <?php
-                                        $conteoUser = "SELECT COUNT(*) AS contadorUser FROM usuarios";
+                                        $conteoVen = "SELECT COUNT(*) AS contadorUser FROM ventas";
                                         try {
-                                            $conteosUser = $con->query($conteoUser);
-                                            $contadorUser = $conteosUser->fetch(PDO::FETCH_ASSOC)['contadorUser'];
+                                            $conteoVenta = $con->query($conteoVen);
+                                            $contadorVent = $conteoVenta->fetch(PDO::FETCH_ASSOC)['contadorUser'];
 
-                                            if ($contadorUser) {
+                                            if ($contadorVent) {
 
                                         ?>
                                                 <h3 class="text-white"><?php echo $contadorUser ?></h3>
