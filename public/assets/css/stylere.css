@@ -24,13 +24,13 @@ body {
 
 .container {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, 0.6);
   padding: 20px;
   border-radius: 32px;
-  width: 30%;
+  width: 65%;
   max-width: 800px; /* Modificación del ancho máximo para pantallas más grandes */
 }
 
@@ -76,8 +76,3 @@ h2 {
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 20px;
 }
-
-
-
-  
-
