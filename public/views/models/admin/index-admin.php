@@ -17,24 +17,49 @@ if (isset($_SESSION['document'])) {
     $documento = $_SESSION['document'];
 
     // Corrige la consulta SQL
-    $sql = $con->prepare("SELECT * FROM usuarios AS u
-        JOIN roles AS r ON u.id_rol = r.id_rol
-        WHERE u.documento = :documento");
+    $sql = $con->prepare("SELECT * FROM usuarios AS u JOIN roles AS r ON u.id_rol = r.id_rol WHERE u.documento = :documento");
     $sql->bindParam(":documento", $documento, PDO::PARAM_STR);
     $sql->execute();
     $usua = $sql->fetch();
 } else {
-    // Manejar el caso en el que la sesión no esté iniciada o 'document' no esté definida
-    echo "La sesión no está iniciada o falta 'documento'";
+    // Manejar el caso en el que la sesión no esté iniciada 
+    echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+    echo '<script>window.location="../../auth/login.php"</script>';
     exit(); // Agrega un exit() para detener la ejecución del script en este punto
 }
 
-// Validación de sesión (código comentado)
-// require_once "../../auth/validationSession.php";
-
 // Cierre de sesión al presionar 'btncerrar'
 if (isset($_POST['btncerrar'])) {
-    session_destroy();
+    $documento = $_SESSION['document'];
+
+    date_default_timezone_set('America/Bogota');
+    $fecha_salida = date('Y-m-d');
+    $hora_salida = date('H:i:s');
+
+    // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
+    $consulta2 = $con->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
+    $consulta2->execute([':documento' => $documento]);
+    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
+
+    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
+    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
+    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
+
+    // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
+    $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
+    // diferencia en segundos se utiliza para calcular la duración formatada
+    $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
+
+    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
+    $consulta3 = $con->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
+    $consulta3->bindParam(":fecha_salida", $fecha_salida);
+    $consulta3->bindParam(":hora_salida", $hora_salida);
+    $consulta3->bindParam(":duracion", $duracion);
+    $consulta3->bindParam(":documento", $documento);
+    $consulta3->bindParam(":codi_ingre", $codi_ingre);
+    $consulta3->execute();
+
+    session_destroy();  // Se cierra la sesión del usuario
     header("Location:../../../../index.html");
 }
 
@@ -328,7 +353,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
         <!--****** Sidebar end **********-->
-        
+
         <!--***** Content body start *********-->
         <div class="content-body">
 
@@ -557,7 +582,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
         <!--***** Content body end *****-->
-        
+
         <!--***** Footer start *******-->
         <div class="footer">
             <div class="copyright">

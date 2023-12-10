@@ -32,8 +32,20 @@ if (isset($_POST["btn-ingresar"])) {
         $consulta2 = $con->prepare("SELECT * FROM ingreso INNER JOIN usuarios ON ingreso.documento=usuarios.documento WHERE ingreso.documento= :documento");
         $consulta2->execute([':documento' => $documento]);
 
-        $consulta3 = $con->prepare("INSERT INTO ingreso (documento, fecha_ingre, hora_ingre) VALUES (:documento, :fecha_actual, :hora_actual)");
-        $consulta3->execute([':documento' => $documento, ':fecha_actual' => $fecha_actual, ':hora_actual' => $hora_actual]);
+        // Insertar un nuevo registro en la tabla 'ingreso'
+        $consulta3 = $con->prepare("INSERT INTO ingreso (codi_ingre, documento, fecha_ingre, hora_ingre) VALUES (:id_ingreso, :documento, :fecha_actual, :hora_actual)");
+
+        // Obtener el próximo id_ingreso autoincremental antes de la inserción
+        $next_id = null;
+        $consulta_next_id = $con->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'toli_camp' AND TABLE_NAME = 'ingreso'");
+        if ($row = $consulta_next_id->fetch(PDO::FETCH_ASSOC)) {
+            $next_id = $row['AUTO_INCREMENT'];
+        }
+
+        // Ejecutar la inserción con el próximo "id_ingreso" autoincremental como valor para "codi_ingre"
+        if ($next_id !== null) {
+            $consulta3->execute([':id_ingreso' => $next_id, ':documento' => $documento, ':fecha_actual' => $fecha_actual, ':hora_actual' => $hora_actual]);
+        }
     }
     /* Set the "cost" parameter to 12. */
     $options = ['cost' => 12];
@@ -90,15 +102,12 @@ if (isset($_POST["btn-ingresar"])) {
 
             header("Location: $redirectLocation");
             exit();
-
-        }else {
+        } else {
             echo '<script>alert("Ingresaste datos erroneos");</script>';
             echo '<script>window.location="../views/auth/error_lo.php";</script>';
         }
-        
     } else {
         echo '<script>alert("Ingresaste datos erroneos");</script>';
         echo '<script>window.location="../views/auth/error_lo.php";</script>';
     }
 }
-?>
