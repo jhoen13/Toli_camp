@@ -20,13 +20,43 @@ if (isset($_SESSION['document'])) {
     $sql->execute();
     $usua = $sql->fetch();
 } else {
-    // Manejar el caso en el que la sesión no esté iniciada o 'document' no esté definida
-    echo "La sesión no está iniciada o falta 'documento'";
+    // Manejar el caso en el que la sesión no esté iniciada 
+    echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+    echo '<script>window.location="../../auth/login.php"</script>';
     exit(); // Agrega un exit() para detener la ejecución del script en este punto
 }
 
 // Cierre de sesión al presionar 'btncerrar'
 if (isset($_POST['btncerrar'])) {
+    $documento = $_SESSION['document'];
+
+    date_default_timezone_set('America/Bogota');
+    $fecha_salida = date('Y-m-d');
+    $hora_salida = date('H:i:s');
+
+    // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
+    $consulta2 = $conexion->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
+    $consulta2->execute([':documento' => $documento]);
+    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
+
+    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
+    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
+    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
+
+    // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
+    $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
+    // diferencia en segundos se utiliza para calcular la duración formatada
+    $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
+
+    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
+    $consulta3 = $conexion->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
+    $consulta3->bindParam(":fecha_salida", $fecha_salida);
+    $consulta3->bindParam(":hora_salida", $hora_salida);
+    $consulta3->bindParam(":duracion", $duracion);
+    $consulta3->bindParam(":documento", $documento);
+    $consulta3->bindParam(":codi_ingre", $codi_ingre);
+    $consulta3->execute();
+
     session_destroy();
     header("Location:../../../../../index.html");
 }
@@ -289,7 +319,7 @@ foreach ($estado as $estad) {
                     <li>
                         <a class="has-arrow " href="../index-admin.php" aria-expanded="false">
                             <i class="fas fa-home"></i>
-                            <span class="nav-text">HOME</span>
+                            <span class="nav-text">INICIO</span>
                         </a>
                     </li>
                     <!-- MODULO PARA VER PERFIL -->
@@ -307,7 +337,7 @@ foreach ($estado as $estad) {
                         </a>
                         <ul aria-expanded="false">
                             <!-- MODULO PARA ENLISTAR O CREAR UN ADMINISTRADOR -->
-                            <li><a href="#">Listar Usuarios</a></li>
+                            <li><a href="#">Lista Usuarios</a></li>
                             <li><a href="./crear.php">Crear Usuarios</a></li>
                         </ul>
                     </li>
@@ -325,7 +355,7 @@ foreach ($estado as $estad) {
                     <!-- MODULO DE DOCUMENTOS -->
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-file"></i>
-                            <span class="nav-text">DOCUMENTOS</span>
+                            <span class="nav-text">TIPO DOCUMENTO</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../documentos/index.php">Lista Documentos</a></li>
@@ -348,7 +378,7 @@ foreach ($estado as $estad) {
                             <span class="nav-text">GENEROS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../genero/index.php">Listar Generos</a></li>
+                            <li><a href="../genero/index.php">Lista Generos</a></li>
                             <li><a href="../genero/crear.php">crear Generos</a></li>
                         </ul>
                     </li>
@@ -358,7 +388,7 @@ foreach ($estado as $estad) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../producto/producto.php">Listar Productos</a></li>
+                            <li><a href="../producto/producto.php">Lista Productos</a></li>
                             <li><a href="../producto/crear.php">crear Productos</a></li>
                         </ul>
                     </li>
@@ -369,11 +399,11 @@ foreach ($estado as $estad) {
                             <span class="nav-text">ROLES</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../roles/index.php">Listar Roles</a></li>
+                            <li><a href="../roles/index.php">Lista Roles</a></li>
                             <li><a href="../roles/crear.php">crear Roles</a></li>
                         </ul>
                     </li>
-                    <!-- MODULO DE ESTADISTICAS -->
+                    <!-- MODULO DE ESTADISTICAS
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">ESTADISTICAS</span>
@@ -383,7 +413,7 @@ foreach ($estado as $estad) {
                             <li><a href="#">Usuarios Bloqueados</a></li>
                         </ul>
 
-                    </li>
+                    </li> -->
                 </ul>
                 <!-- FOOTER -->
                 <div class="copyright">
@@ -420,7 +450,7 @@ foreach ($estado as $estad) {
                             </div>
                             <div class="card-body">
                                 <div class="row" style="font-size: 25px;">
-                                    <a href="./crear.php" class="btn btn-margin col-4" style="background-color: #67DC9F; color:#ffff;">Crear un usuario</a><br>
+                                    <a href="./crear.php" class="btn btn-margin col-4" style="background-color: #0097B2; color:#ffff;">Crear un usuario</a><br>
                                 </div>
                                 <div class="table-responsive">
                                     <table id="example3" class="display text-center" style="min-width: 845px">
@@ -507,13 +537,13 @@ foreach ($estado as $estad) {
                                                         </form>
                                                     </td>
                                                     <td>
-                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E1C022; color:#fff" onclick="return confirm('¿Está seguro de actualizar este paciente?')">
+                                                        <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E1C022; color:#fff" onclick="return confirm('¿Está seguro de actualizar este Usuario?')">
                                                             <span class="icon"><i class="fas fa-pencil-alt"></i></span>
                                                             <span class="text">ACTUALIZAR</span>
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E0322A; color:#fff" onclick="return confirm('¿Está seguro de eliminar este paciente?')">
+                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E0322A; color:#fff" onclick="return confirm('¿Está seguro de eliminar este Usuario?')">
                                                             <span class="icon"><i class="fas fa-trash-alt"></i></span>
                                                             <span class="text">ELIMINAR</span>
                                                         </a>

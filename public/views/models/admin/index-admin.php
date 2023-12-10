@@ -248,7 +248,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                     <li>
                         <a class="has-arrow " href="./index-admin.php" aria-expanded="false">
                             <i class="fas fa-home"></i>
-                            <span class="nav-text">HOME</span>
+                            <span class="nav-text">INICIO</span>
                         </a>
                     </li>
                     <!-- MODULO PARA VER PERFIL -->
@@ -284,7 +284,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                     <!-- MODULO DE DOCUMENTOS -->
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-file"></i>
-                            <span class="nav-text">DOCUMENTOS</span>
+                            <span class="nav-text">TIPO DOCUMENTO</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="./documentos/index.php">Lista Documentos</a></li>
@@ -317,7 +317,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./producto/producto.php">Listar Productos</a></li>
+                            <li><a href="./producto/index.php">Listar Productos</a></li>
                             <li><a href="./producto/crear.php">crear Productos</a></li>
                         </ul>
                     </li>
@@ -332,7 +332,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <li><a href="./roles/crear.php">crear Roles</a></li>
                         </ul>
                     </li>
-                    <!-- MODULO DE ESTADISTICAS -->
+                    <!-- MODULO DE ESTADISTICAS
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">ESTADISTICAS</span>
@@ -342,7 +342,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <li><a href="index.html">Usuarios Bloqueados</a></li>
                         </ul>
 
-                    </li>
+                    </li> -->
                 </ul>
                 <!-- FOOTER -->
                 <div class="copyright">

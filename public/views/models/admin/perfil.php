@@ -24,17 +24,44 @@ if (isset($_SESSION['document'])) {
     $sql->execute();
     $usua = $sql->fetch();
 } else {
-    // Manejar el caso en el que la sesión no esté iniciada o 'document' no esté definida
-    echo "La sesión no está iniciada o falta 'documento'";
+    // Manejar el caso en el que la sesión no esté iniciada 
+    echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+    echo '<script>window.location="../../auth/login.php"</script>';
     exit(); // Agrega un exit() para detener la ejecución del script en este punto
 }
 
-// Validación de sesión (código comentado)
-// require_once "../../auth/validationSession.php";
-
 // Cierre de sesión al presionar 'btncerrar'
 if (isset($_POST['btncerrar'])) {
-    session_destroy();
+    $documento = $_SESSION['document'];
+
+    date_default_timezone_set('America/Bogota');
+    $fecha_salida = date('Y-m-d');
+    $hora_salida = date('H:i:s');
+
+    // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
+    $consulta2 = $con->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
+    $consulta2->execute([':documento' => $documento]);
+    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
+
+    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
+    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
+    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
+
+    // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
+    $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
+    // diferencia en segundos se utiliza para calcular la duración formatada
+    $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
+
+    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
+    $consulta3 = $con->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
+    $consulta3->bindParam(":fecha_salida", $fecha_salida);
+    $consulta3->bindParam(":hora_salida", $hora_salida);
+    $consulta3->bindParam(":duracion", $duracion);
+    $consulta3->bindParam(":documento", $documento);
+    $consulta3->bindParam(":codi_ingre", $codi_ingre);
+    $consulta3->execute();
+
+    session_destroy();  // Se cierra la sesión del usuario
     header("Location:../../../../index.html");
 }
 
@@ -223,7 +250,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                     <li>
                         <a class="has-arrow " href="./index-admin.php" aria-expanded="false">
                             <i class="fas fa-home"></i>
-                            <span class="nav-text">HOME</span>
+                            <span class="nav-text">INICIO</span>
                         </a>
                     </li>
                     <!-- MODULO PARA VER PERFIL -->
@@ -307,7 +334,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <li><a href="./roles/crear.php">crear Roles</a></li>
                         </ul>
                     </li>
-                    <!-- MODULO DE ESTADISTICAS -->
+                    <!-- MODULO DE ESTADISTICAS
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">ESTADISTICAS</span>
@@ -317,7 +344,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <li><a href="index.html">Usuarios Bloqueados</a></li>
                         </ul>
 
-                    </li>
+                    </li> -->
                 </ul>
                 <!-- FOOTER -->
                 <div class="copyright">
@@ -356,14 +383,30 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 									</div>
 									<div class="profile-details">
 										<div class="profile-name px-3 pt-2">
-											<h4 class="text-primary mb-0">Soeng Souy</h4>
-											<p>UX / UI Designer</p>
+											<h4 class="text-primary mb-0"><?php echo $respuesta['nombre'] ?> <?php echo $respuesta['apellido'] ?></h4>
+											<p>Nombre y Apellido</p>
 										</div>
 										<div class="profile-email px-2 pt-2">
-											<h4 class="text-muted mb-0">info@example.com</h4>
+											<h4 class="text-muted mb-0"><?php echo $respuesta['correo_electronico'] ?></h4>
 											<p>Email</p>
 										</div>
-										<div class="dropdown ms-auto">
+
+                                        <div class="profile-email px-2 pt-2">
+											<h4 class="text-muted mb-0"><?php echo $respuesta['documento'] ?></h4>
+											<p>Documento</p>
+										</div>
+
+                                        <div class="profile-email px-2 pt-2">
+											<h4 class="text-muted mb-0"><?php echo $respuesta['celular'] ?></h4>
+											<p>Celular</p>
+										</div>
+
+                                        <div class="profile-email px-2 pt-2">
+											<h4 class="text-muted mb-0"><?php echo $respuesta['celular'] ?></h4>
+											<p>Direcciòn</p>
+										</div>
+                                        
+										<!-- <div class="dropdown ms-auto">
 											<a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewbox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></a>
 											<ul class="dropdown-menu dropdown-menu-end">
 												<li class="dropdown-item"><i class="fa fa-user-circle text-primary me-2"></i> View profile</li>
@@ -371,7 +414,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 												<li class="dropdown-item"><i class="fa fa-plus text-primary me-2"></i> Add to group</li>
 												<li class="dropdown-item"><i class="fa fa-ban text-primary me-2"></i> Block</li>
 											</ul>
-										</div>
+										</div> -->
 									</div>
                                 </div>
                             </div>
@@ -379,7 +422,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-4">
+                    <!-- <div class="col-xl-4">
 						<div class="row">
 							<div class="col-xl-12">
 								<div class="card">
@@ -402,7 +445,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 													<a href="javascript:void(0);" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">Send Message</a>
 												</div>
 											</div>
-											<!-- Modal -->
+											 Modal 
 											<div class="modal fade" id="sendMessageModal">
 												<div class="modal-dialog modal-dialog-centered" role="document">
 													<div class="modal-content">
@@ -445,8 +488,8 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-xl-12">
+							</div> -->
+							<!-- <div class="col-xl-12">
 								<div class="card">
 									<div class="card-body">
 										<div class="profile-blog">
@@ -457,8 +500,8 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-xl-12">
+							</div> -->
+							<!-- <div class="col-xl-12">
 								<div class="card">
 									<div class="card-body">
 										<div class="profile-interest">
@@ -486,8 +529,8 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-xl-12">
+							</div> -->
+							<!-- <div class="col-xl-12">
 								<div class="card">
 									<div class="card-body">
 										<div class="profile-news">
@@ -516,20 +559,16 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> 
 						</div>
-                    </div>
-                    <div class="col-xl-8">
+                    </div> -->
+                    <!-- <div class="col-xl-8">
                         <div class="card">
                             <div class="card-body">
                                 <div class="profile-tab">
                                     <div class="custom-tab-1">
                                         <ul class="nav nav-tabs">
-                                            <li class="nav-item"><a href="#my-posts" data-bs-toggle="tab" class="nav-link active show">Posts</a>
-                                            </li>
-                                            <li class="nav-item"><a href="#about-me" data-bs-toggle="tab" class="nav-link">About Me</a>
-                                            </li>
-                                            <li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link">Setting</a>
+                                            <li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link">Editar perfil</a>
                                             </li>
                                         </ul>
                                         <div class="tab-content">
@@ -538,7 +577,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="post-input">
                                                         <textarea name="textarea" id="textarea" cols="30" rows="5" class="form-control bg-transparent" placeholder="Please type what you want...."></textarea> 
 														<a href="javascript:void(0);" class="btn btn-primary light me-1 px-3" data-bs-toggle="modal" data-bs-target="#linkModal"><i class="fa fa-link m-0"></i> </a>
-														<!-- Modal -->
+														
 														<div class="modal fade" id="linkModal">
 															<div class="modal-dialog modal-dialog-centered" role="document">
 																<div class="modal-content">
@@ -560,7 +599,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 															</div>
 														</div>
                                                         <a href="javascript:void(0);" class="btn btn-primary light me-1 px-3" data-bs-toggle="modal" data-bs-target="#cameraModal"><i class="fa fa-camera m-0"></i> </a>
-														<!-- Modal -->
+														
 														<div class="modal fade" id="cameraModal">
 															<div class="modal-dialog modal-dialog-centered" role="document">
 																<div class="modal-content">
@@ -579,9 +618,9 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
 																	</div>
 																</div>
 															</div>
-														</div>
-														<a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">Post</a>
-														<!-- Modal -->
+														</div> -->
+														<!-- <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">Post</a>
+														Modal
 														<div class="modal fade" id="postModal">
 															<div class="modal-dialog modal-dialog-centered" role="document">
 																<div class="modal-content">
@@ -623,7 +662,7 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                                                         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#replyModal"><span class="me-2"><i class="fa fa-reply"></i></span>Reply</button>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div id="about-me" class="tab-pane fade">
                                                 <div class="profile-about-me">
                                                     <div class="pt-4 border-bottom-1 pb-3">

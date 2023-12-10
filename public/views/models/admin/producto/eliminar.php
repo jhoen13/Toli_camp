@@ -13,9 +13,9 @@ if (isset($_GET['id_producto'])) {
     $deletesql->execute();
 
     echo '<script>alert("Producto Eliminado Exitosamente");</script>';
-    echo '<script>window.location="producto.php"</script>';
+    echo '<script>window.location="index.php"</script>';
 } else {
     echo '<script>alert("Error: ID de producto no proporcionado");</script>';
-    echo '<script>window.location="producto.php"</script>';
+    echo '<script>window.location="index.php"</script>';
 }
 ?>

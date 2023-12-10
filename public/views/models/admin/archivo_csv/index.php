@@ -43,6 +43,12 @@
 
     <div class="">
       <div class="container">
+        
+        <div class="row" style="font-size: 25px;">
+          <div class="col-4">
+            <a href="../producto/index.php" class="btn btn-margin" style="background-color: #67DC9F; color:#ffff;">Volver</a>
+          </div>
+        </div>
         <h4 class="text-center">¡Sugerencias!</h4><br>
         <p class="text-center">Al importar el archivo CSV/Excel, es importante omitir la columna correspondiente al campo "id_producto" durante el proceso de carga. Esta columna contiene los identificadores únicos de los productos, sin embargo, la tabla de destino ya cuenta con un ID autoincremental asignado. <br><br> Por favor, asegúrate de que la carga del archivo se realice excluyendo esta columna específica ("id_producto"), tal como se muestra en la "imagen 1" adjunta como referencia. La omisión de esta columna evitará duplicidades y permitirá que la base de datos asigne los IDs automáticamente durante la importación. <br><br>Una vez completada la importación sin el campo "id_producto", la "imagen 2" muestra un ejemplo de cómo debería lucir la tabla resultante. <br> ¡Gracias por tu colaboración!</p>
 
@@ -95,7 +101,6 @@
               <th>NOMBRE</th>
               <th>DESCRIP</th>
               <th>PRECIO COMPRA</th>
-              <th>DISPONIBLES</th>
               <th>ID_CATEGORIA</th>
               <th>CANTIDAD</th>
               <th>ID_EMBALAJE</th>
@@ -113,7 +118,6 @@
                 <td><?php echo $data['nom_produc']; ?></td>
                 <td><?php echo $data['descrip']; ?></td>
                 <td><?php echo $data['precio_compra']; ?></td>
-                <td><?php echo $data['disponibles']; ?></td>
                 <td><?php echo $data['id_categoria']; ?></td>
                 <td><?php echo $data['cantidad']; ?></td>
                 <td><?php echo $data['id_embala']; ?></td>
@@ -123,7 +127,7 @@
               </tr>
             <?php } ?>
           </tbody>
-        </table>
+        </table><br><br>
 
       </div>
     </div>

@@ -7,17 +7,20 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: "Times New Roman", serif;
-
-
+  font-size: 16px; /* Tamaño de fuente base */
 }
 
 /* Media query para ajustar la imagen en pantallas más pequeñas */
 @media only screen and (max-width: 768px) {
   body {
-      background-size: contain;
+    background-size: contain;
+    font-size: 14px; /* Ajuste de tamaño de fuente en pantallas más pequeñas */
+  }
+
+  .container {
+    padding: 10px; /* Reducción de espacio de relleno en pantallas más pequeñas */
   }
 }
-
 
 .container {
   position: absolute;
@@ -28,51 +31,52 @@ body {
   padding: 20px;
   border-radius: 32px;
   width: 30%;
-  max-width: 800px; /* Modifica el ancho máximo para pantallas más grandes */
+  max-width: 800px; /* Modificación del ancho máximo para pantallas más grandes */
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px; /* Ajuste del ancho máximo para pantallas más grandes */
+  }
 }
 
 @media (max-width: 768px) {
   .container {
-    width: 90%;
+    width: 90%; /* Ajuste del ancho en pantallas más pequeñas */
   }
 }
 
 @media (max-width: 576px) {
   .container {
-    width: 95%;
+    width: 95%; /* Ajuste del ancho en pantallas aún más pequeñas */
   }
 }
 
-
-
 .btn_ing {
-    background: linear-gradient(to right, #28503C, #62DC9F);
-    color: #000000;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 32px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-
+  background: linear-gradient(to right, #28503C, #62DC9F);
+  color: #000000;
+  padding: 8px 16px; /* Reducción del relleno del botón en pantallas más pequeñas */
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  font-size: 14px; /* Ajuste del tamaño de fuente del botón en pantallas más pequeñas */
+  font-weight: bold;
+  text-align: center;
 }
-
 
 h2 {
-    font-weight: bold;
-    text-align: center;
+  font-weight: bold;
+  text-align: center;
 }
-
 
 .form-control {
-    border-left: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    background-color:rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
 }
+
 
 
   

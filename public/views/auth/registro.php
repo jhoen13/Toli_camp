@@ -25,7 +25,6 @@ $consullll = $consulta4->fetch();
 <?php
 // BOTON DE REGISTRO EL CUAL VIENE DE UN BUTTON, VALUE DEL FORMULARIO
 if ((isset($_POST["btn-registrar"]))) {
-
   // DATOS DEL FORMULARIO Y DB
   $tip_docu = $_POST['id_tipdocu'];
   $documento = $_POST['documento'];
@@ -39,28 +38,57 @@ if ((isset($_POST["btn-registrar"]))) {
   $rol = $_POST['id_rol'];
   $estado = $_POST['id_estado'];
 
+  if (!empty($_FILES['foto']['name'])) {
+      $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+      $nom = "usuario_" . time();
+      $foto_nombre = $nom . "." . $extension;
+      $ruta_destino = "../../assets/img/img_user/$foto_nombre";
+
+      // Mueve el archivo a la ruta de destino
+      move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
+  } else {
+      // Si no se envió un archivo, muestra un mensaje de error y redirige
+      echo '<script>alert("No se ha seleccionado una imagen"); window.location="./index.php"</script>';
+      exit(); // Detiene la ejecución del script
+  }
+
   $consulta2 = $con->prepare("SELECT * FROM usuarios WHERE documento= '$documento' OR correo_electronico = '$email'");
   $consulta2->execute();
   $consull = $consulta2->fetchAll();
 
   if ($consull) {
-    // SI SE CUMPLE ESTA CONSULTA ES PORQUE EL DOCUMENTO O EL EMAIL YA EXISTEN EN LA DB
-    echo '<script> alert ("// Estimado Usuario, los datos ingresados ya estan registrados. //");</script>';
-    echo '<script>windows.location="registro.php"</script>';
-  } else if ($documento == "" || $nombre == "" || $apellido == "" || $email == "" || $pass == "" || $celular == "" || $direc == "" || $genero == "" || $rol == "" || $estado == "") {
-    // CONDICIONAL DEPENDE SI EXISTEN DATOS VACIOS EN EL FORMULARIO 
-    echo '<script> alert ("Estimado Usuario, Existen Datos Vacios En El Formulario");</script>';
-    echo '<script>windows.location="registro.php"</script>';
+      // SI SE CUMPLE ESTA CONSULTA ES PORQUE EL DOCUMENTO O EL EMAIL YA EXISTEN EN LA DB
+      echo '<script> alert ("// Estimado Usuario, los datos ingresados ya están registrados. //");</script>';
+      echo '<script>windows.location="registro.php"</script>';
+  } elseif ($documento == "" || $nombre == "" || $apellido == "" || $email == "" || $pass == "" || $celular == "" || $direc == "" || $genero == "" || $rol == "" || $foto_nombre == "" || $estado == "") {
+      // CONDICIONAL DEPENDIENDO SI EXISTEN DATOS VACÍOS EN EL FORMULARIO 
+      echo '<script> alert ("Estimado Usuario, Existen Datos Vacios En El Formulario");</script>';
+      echo '<script>windows.location="registro.php"</script>';
   } else {
-    // HASH DE LA PASSWORD, SE ENCRIPTA
-    $hash_pass = password_hash($pass, PASSWORD_DEFAULT);
+      // HASH DE LA PASSWORD, SE ENCRIPTA
+      $hash_pass = password_hash($pass, PASSWORD_DEFAULT);
 
-    $consulta3 = $con->prepare("INSERT INTO usuarios (documento, nombre, apellido, correo_electronico, password, celular, direccion, id_genero, id_rol, id_estado, id_tipdocu ) VALUES ('$documento','$nombre','$apellido','$email','$hash_pass', '$celular', '$direc', '$genero', '$rol', '$estado', '$tip_docu')");
-    $consulta3->execute();
-    echo '<script>alert ("Registro exitoso, gracias por tu registro, ya puedes iniciar sesión.");</script>';
-    echo '<script>window.location="login.php"</script>';
+      $consulta3 = $con->prepare("INSERT INTO usuarios (documento, nombre, apellido, correo_electronico, password, celular, direccion, id_genero, id_rol, id_estado, foto, id_tipdocu ) VALUES ('$documento','$nombre','$apellido','$email','$hash_pass', '$celular', '$direc', '$genero', '$rol', '$estado', '$foto_nombre', $tip_docu)");
+      $consulta3->execute();
+
+      // Obtener el último documento de usuario insertado
+      $documento_insertado = $documento;
+
+      // Verificar el id_rol y actualizar el id_estado si es necesario
+      if ($rol == 3 || $rol == 6) {
+          $nuevo_estado = 2;
+
+          $consulta4 = $con->prepare("UPDATE usuarios SET id_estado = :nuevo_estado WHERE documento = :documento");
+          $consulta4->bindParam(':nuevo_estado', $nuevo_estado);
+          $consulta4->bindParam(':documento', $documento_insertado);
+          $consulta4->execute();
+      }
+
+      echo '<script>alert ("Registro exitoso, gracias por tu registro, ya puedes iniciar sesión.");</script>';
+      echo '<script>window.location="login.php"</script>';
   }
 }
+
 ?>
 
 
@@ -176,6 +204,10 @@ if ((isset($_POST["btn-registrar"]))) {
             ?>
             </select>
         </div>
+        <div class="form-group col">
+            <label for="imagen">Foto De Perfil:</label>
+            <input type="file" class="form-control-file" id="foto" name="foto" accept="image/*" required>
+        </div>
     </div>
 
     <div class="row">
@@ -201,6 +233,7 @@ if ((isset($_POST["btn-registrar"]))) {
     </div>
 
     <div style="text-align: center;">
+    <br>
         <button type="submit" value="registrar" name="btn-registrar" class="btn_ing">REGISTRAR</button><br>
         <a class="ingresar" href="login.php" style="color: black;">Ingresar</a><br>
     </div>

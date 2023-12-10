@@ -18,7 +18,7 @@
     <!-- mt es margin top; l left; b buttom y asi con todas las partes del margin -->
     <div class="container mt-5">
         <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
-        <a href="../../../index.html" style="color: #000000;" class="d-flex align-items-center">
+        <a href="../../../index.html" style="color: #28503C;" class="d-flex align-items-center">
             <i class="fas fa-arrow-left mr-2 fa-2x"></i>
         </a>
         </button>

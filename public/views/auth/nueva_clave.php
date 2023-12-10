@@ -6,22 +6,30 @@ $con = $db->conectar();
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
     $contra = $_POST['cont'];
+    $conta = $_POST['conta'];
 
-    if ($_POST['cont'] == "" || $_POST['conta'] == "") {
-        echo "<script>alert('Este campo es obrigatórios.');</script>";
+    if ($contra == "" || $conta == "") {
+        echo "<script>alert('Ambos campos son obligatorios.');</script>";
+        echo '<script>window.location="login.php"</script>';
+    } elseif ($contra != $conta) {
+        echo "<script>alert('Las contraseñas no coinciden.');</script>";
         echo '<script>window.location="login.php"</script>';
     } else {
+        if (!isset($_SESSION['documento']) || empty($_SESSION['documento'])) {
+            echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+            echo '<script>window.location="login.php"</script>';
+            exit();
+        }
 
         $docu = $_SESSION['documento'];
-        $encriptar= password_hash($contra, PASSWORD_BCRYPT, ["cost"=> 15]);
-        $conteudo = $con -> prepare ("UPDATE usuarios SET password = '$encriptar' where documento = '$docu'");
-        $conteudo -> execute();
-        $ff = $conteudo-> fetch();
-        echo "<script>alert('su contraseña a sido cambiada!');</script>";
+        $encriptar = password_hash($contra, PASSWORD_BCRYPT, ["cost" => 15]);
+        $conteudo = $con->prepare("UPDATE usuarios SET password = '$encriptar' WHERE documento = '$docu'");
+        $conteudo->execute();
+        $ff = $conteudo->fetch();
+        echo "<script>alert('¡Tu contraseña ha sido cambiada!');</script>";
         echo '<script>window.location="login.php"</script>';
     }
 }
-
 
 ?>
 
@@ -60,7 +68,7 @@ if ((isset($_POST["MM_vali"])) && ($_POST["MM_vali"] == "form2"))
 <body>
     <div class="container mt-5">
         <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
-            <a href="rectificacion.html" style="color: #000000;" class="d-flex align-items-center">
+            <a href="rectificacion.html" style="color: #28503C;" class="d-flex align-items-center">
                 <i class="fas fa-arrow-left mr-2 fa-2x"></i> 
             </a>
         </button>

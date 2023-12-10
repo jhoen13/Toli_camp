@@ -113,7 +113,7 @@
             <div class="row">
                 <div class="col-lg-4 py-0 py-lg-5">
                     <h1 class="mb-3">Misión:</h1>
-                    <p class="mb-3">Nuestra misión es lograr que los campesinos, los compradores mayoristas y minoristas
+                    <p class="mb-3" style="text-align: justify;">Nuestra misión es lograr que los campesinos, los compradores mayoristas y minoristas
                         den a conocer sus productos, también facilite la compra de productos agrícolas e impulsar
                         productos locales. </p>
 
@@ -131,7 +131,7 @@
                 </div>                
                 <div class="col-lg-4 py-0 py-lg-5">
                     <h1 class="mb-3">Vision: </h1>
-                    <p> Nuestra visión es que en un lapso de 3 años nuestro Software sea innovador y eficaz, conecte a
+                    <p style="text-align: justify;"> Nuestra visión es que en un lapso de 3 años nuestro Software sea innovador y eficaz, conecte a
                         las personas con la belleza, la riqueza cultural y la vitalidad de los campos y plazas.
                     </p>
                     <h5 class="mb-3"><i class="fa fa-check text-primary mr-3"></i>Productos mas sanos </h5>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="col-sm-7">
                             <h4><i class="fa fa-truck service-icon"></i>Frutas frescas</h4>
-                            <p class="m-0">Las frutas frescas son esenciales en la dieta por su delicioso sabor y alto
+                            <p class="m-0" style="text-align: justify;">Las frutas frescas son esenciales en la dieta por su delicioso sabor y alto
                                 valor nutricional. Desde las fresas hasta los aguacates, ofrecen opciones saludables,
                                 ricas en vitaminas y antioxidantes, promoviendo una alimentación equilibrada y
                                 contribuyendo a la salud general.</p>
@@ -176,7 +176,7 @@
                         </div>
                         <div class="col-sm-7">
                             <h4><i class="fa fa-coffee service-icon"></i>Verduras y hortalizas</h4>
-                            <p class="m-0">Las verduras y hortalizas son fundamentales en una dieta equilibrada,
+                            <p class="m-0" style="text-align: justify;">Las verduras y hortalizas son fundamentales en una dieta equilibrada,
                                 proporcionando nutrientes esenciales como vitaminas, minerales y fibra. Desde los
                                 tomates jugosos hasta las espinacas ricas en hierro, añaden variedad de colores, sabores
                                 y texturas a las comidas.
@@ -192,7 +192,7 @@
                         </div>
                         <div class="col-sm-7">
                             <h4><i class="fa fa-award service-icon"></i>Carnes frescas</h4>
-                            <p class="m-0">Las carnes frescas, como pollo, cerdo, res, pescado y mariscos, son una
+                            <p class="m-0" style="text-align: justify;">Las carnes frescas, como pollo, cerdo, res, pescado y mariscos, son una
                                 valiosa fuente de proteínas y nutrientes esenciales en la dieta. Su versatilidad en la
                                 cocina, ya sea asadas, cocidas, a la parrilla o preparadas de diversas formas, las hace
                                 apreciadas por su sabor y valor nutricional.</p>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="col-sm-7">
                             <h4><i class="fa fa-table service-icon"></i>Productos agrícolas</h4>
-                            <p class="m-0">son elementos fundamentales de la dieta y la economía, derivados directamente
+                            <p class="m-0" style="text-align: justify;">Son elementos fundamentales de la dieta y la economía, derivados directamente
                                 de la agricultura. Estos incluyen una amplia gama de alimentos como frutas, verduras,
                                 granos, legumbres, frutos secos y productos derivados de la tierra</p>
                         </div>
@@ -231,7 +231,7 @@
                             <div class="p-5">
                                 <div class="mb-4">
                                     <h1 class="display-3 text" style="color: #62DC9F;">Ayudanos</h1>
-                                    <p class="text-white">Estamos abiertos a recibir comentarios y sugerencias para
+                                    <p class="text-white" style="text-align: justify;">Estamos abiertos a recibir comentarios y sugerencias para
                                         optimizar y perfeccionar la calidad de nuestros servicios. Tus aportes son
                                         valiosos y contribuyen directamente a la mejora continua de la plataforma.
                                         ¡Apreciamos tu participación!</p>
@@ -241,21 +241,17 @@
                         <div class="col-lg-6">
                             <div class="text-center p-5">
                                 <h1 class="text-white mb-4 mt-5">Buzon de Sugerecias</h1>
-                                <form class="mb-5">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control bg-transparent border-primary p-4"
-                                            placeholder="Escribe tu Email" required="required" /><br>
+                                <form class="mb-5" action="public/views/auth/correo.php"  method="post">
+                                    <input type="email" name="correo" class="form-control bg-transparent border-primary p-4" placeholder="Escribe tu Email" required="required" style="color: white; ::placeholder { color: #FFFFFF; opacity: 1; }" /><br>
                   
                                     <div class="form-group">
-                                        <div class="text" id="sugerencia" data-target-input="nearest">
-                                            <input type="text"
-                                                class="form-control bg-transparent border-primary p-4 datetimepicker-input"
-                                                placeholder="Escribe tus sugerencias..."  />
-                                        </div>
+                                        <div class="text" id="sugerencia" data-target-input="nearest" style="color: white;">
+                                            <input type="text" name="sugerencia" class="form-control bg-transparent border-primary p-4 datetimepicker-input"
+                                                placeholder="Escribe tus sugerencias..." style="color: white; ::placeholder { color: white; opacity: 1; }" />
+                                        </div>                                        
                                     </div>
                                     <div>
-                                        <button class="btn-primary btn-block font-weight-bold py-3" type="submit" style="background-color: #62DC9F;">Enviar</button>
-
+                                        <button class="btn-primary btn-block font-weight-bold py-3" type="submit" style="background-color: #62DC9F;" name="send">Enviar</button>
                                     </div>
                                 </form>
                             </div>
@@ -280,11 +276,8 @@
                     <img class="w-50 mb-2 mb-sm-0 mx-auto d-block" src="./public/assets/img/Aprendices-10072023.jpg" alt=""> <br>
                 </div> <br>
 
-                <p class="m-0">Somos aprendices del SENA con la intención de desarrollar un software que facilite el
-                    acceso a productos del campo, contribuyendo así a fortalecer la economía de los productores. Nuestra
-                    meta es crear una plataforma que simplifique la interacción entre productores y usuarios,
-                    promoviendo la comercialización directa de productos frescos y apoyando el crecimiento sostenible de
-                    las comunidades rurales.</p>
+                <p class="m-0" style="text-align: justify;">Somos un equipo comprometido con el campo colombiano. Observamos cómo la crisis económica afecta drásticamente a los campesinos. Nuestras encuestas revelaron una realidad alarmante: los proveedores ganan más que los propios campesinos, a pesar de su incansable labor. Nos dedicamos a cerrar esta brecha injusta y promover una compensación equitativa por su arduo trabajo.</p>
+
             </div>
         </div>
     </div>

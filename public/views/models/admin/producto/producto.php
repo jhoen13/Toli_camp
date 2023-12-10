@@ -39,7 +39,6 @@ foreach ($embalajes as $embalaje) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,57 +62,53 @@ foreach ($embalajes as $embalaje) {
         }
     </style>
 </head>
-
 <body>
-    <div class="table-responsive"><br>
-        <a href="../../../../views/models/admin/index-admin.php" class="btn btn-warning btn-margin">Volver</a>
-        <a href="crear.php" class="btn btn-success btn-margin">Crear un Producto</a>
-        <a href="../archivo_csv/index.php" class="btn btn-primary btn-margin">Archivo CSV</a>
-        <br>
-        <table class="table table-bordered">
-            <thead class="table-dark">
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID producto</th>
+                <th scope="col">Nombre del Producto</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Disponibles</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Embalaje</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Precio venta</th>
+                <th scope="col">Documento</th>
+                <th colspan="2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($productos as $producto) { ?>
                 <tr>
-                    <th scope="col">ID producto</th>
-                    <th scope="col">Nombre del Producto</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col">Disponibles</th>
-                    <th scope="col">Categoría</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Embalaje</th>
-                    <th scope="col">Foto</th>
-                    <th scope="col">Precio venta</th>
-                    <th scope="col">Documento</th>
-                    <th colspan="2">Acciones</th>
+                    <td scope="row"><?php echo $producto['id_producto']; ?></td>
+                    <td><?php echo $producto['nom_produc']; ?></td>
+                    <td scope="row"><?php echo $producto['descrip']; ?></td>
+                    <td><?php echo $producto['precio_compra']; ?></td>
+                    <td scope="row"><?php echo $producto['disponibles']; ?></td>
+                    <td><?php echo $categoriasMap[$producto['id_categoria']]; ?></td>
+                    <td scope="row"><?php echo $producto['cantidad']; ?></td> 
+                    <td scope="row"><?php echo $embalajesMap[$producto['id_embala']]; ?></td>
+                    <td><img src="../../../../assets/img/img_produc/<?= $producto["foto"] ?>" alt="" style="width: 75px;"></td>
+                    <td scope="row"><?php echo $producto['precio_ven']; ?></td>
+                    <td scope="row"><?php echo $producto['documento']; ?></td>
+                    <td>
+                        <a href="editar.php?id_producto=<?php echo $producto['id_producto']; ?> " class="btn btn-success btn-margin">Editar</a>
+                    </td>
+                    <td>
+                        <a href="eliminar.php?id_producto=<?php echo $producto['id_producto']; ?>" class="btn btn-danger btn-margin">Eliminar</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($productos as $producto) { ?>
-                    <tr>
-                        <td scope="row"><?php echo $producto['id_producto']; ?></td>
-                        <td><?php echo $producto['nom_produc']; ?></td>
-                        <td scope="row"><?php echo $producto['descrip']; ?></td>
-                        <td><?php echo $producto['precio_compra']; ?></td>
-                        <td scope="row"><?php echo $producto['disponibles']; ?></td>
-                        <td><?php echo $categoriasMap[$producto['id_categoria']]; ?></td>
-                        <td scope="row"><?php echo $producto['cantidad']; ?></td>
-                        <td scope="row"><?php echo $embalajesMap[$producto['id_embala']]; ?></td>
-                        <td><img src="../../../../assets/img/img_produc/<?= $producto["foto"] ?>" alt="" style="width: 75px;"></td>
-                        <td scope="row"><?php echo $producto['precio_ven']; ?></td>
-                        <td scope="row"><?php echo $producto['documento']; ?></td>
-                        <td>
-                            <a href="editar.php?id_producto=<?php echo $producto['id_producto']; ?> " class="btn btn-success btn-margin">Editar</a>
-                        </td>
-                        <td>
-                            <a href="eliminar.php?id_producto=<?php echo $producto['id_producto']; ?>" class="btn btn-danger btn-margin">Eliminar</a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-
-        </table>
-    </div>
+            <?php } ?>
+        </tbody>
+        
+    </table>
+    <a href="crear.php" class="btn btn-success btn-margin">Crear un Producto</a>
+    <a href="../../../../views/models/admin/index-admin.php" class="btn btn-primary btn-margin">Volver</a>
+</div>
 
 </body>
-
 </html>
