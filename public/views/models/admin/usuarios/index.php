@@ -489,16 +489,22 @@ foreach ($estado as $estad) {
                                                         ?>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn btn-success shadow btn-xxl sharp" onclick="return confirm('¿Está seguro de Activar este usuario?')">
-                                                            <span class="icon"><i class="fas fa-user-check"></i></span>
-                                                            <span class="text">ACTIVAR</span>
-                                                        </a>
+                                                        <form action="./activar_usu.php" method="GET">
+                                                            <input type="hidden" name="activar" value="<?= $use['documento'] ?>">
+                                                            <button class="btn btn-success shadow btn-xxl sharp" type="submit" onclick="return confirm('¿Está seguro de activar este usuario?')">
+                                                                <span class="icon"><i class="fas fa-user-check"></i></span>
+                                                                <span class="text">ACTIVAR</span>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                     <td>
-                                                        <a href="eliminar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#FA0806; color:#fff;" onclick="return confirm('¿Está seguro de desactivar este usuario?')">
-                                                            <span class="icon"><i class="fas fa-user-lock"></i></span>
-                                                            <span class="text">DESACTIVAR</span>
-                                                        </a>
+                                                        <form action="./inactivar_usu.php" method="GET">
+                                                            <input type="hidden" name="inactivar" value="<?= $use['documento'] ?>">
+                                                            <button class="btn shadow btn-xxl sharp" type="submit" style="background-color:#FA0806; color:#fff;" onclick="return confirm('¿Está seguro de desactivar este usuario?')">
+                                                                <span class="icon"><i class="fas fa-user-lock"></i></span>
+                                                                <span class="text">DESACTIVAR</span>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                     <td>
                                                         <a href="editar.php?documento=<?php echo $use['documento']; ?>" class="btn shadow btn-xxl sharp" style="background-color:#E1C022; color:#fff" onclick="return confirm('¿Está seguro de actualizar este paciente?')">
