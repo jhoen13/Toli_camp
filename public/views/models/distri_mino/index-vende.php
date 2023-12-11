@@ -8,10 +8,56 @@ $con = $db->conectar();
 if (isset($_SESSION['document'])) {
     $nombreUsuario = $_SESSION['document'];
     $mensajeBienvenida = "Bienvenido, $nombreUsuario!";
+
+    $documento = $_SESSION['document'];
+
+    // Corrige la consulta SQL
+    $sql = $con->prepare("SELECT * FROM usuarios AS u
+        JOIN roles AS r ON u.id_rol = r.id_rol
+        WHERE u.documento = :documento");
+    $sql->bindParam(":documento", $documento, PDO::PARAM_STR);
+    $sql->execute();
+    $usua = $sql->fetch();
 } else {
-    // Redirigir a la página de inicio de sesión si no ha iniciado sesión
-    header("Location: index.php");
-    exit();
+    // Manejar el caso en el que la sesión no esté iniciada 
+    echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+    echo '<script>window.location="../../auth/login.php"</script>';
+    exit(); // Agrega un exit() para detener la ejecución del script en este punto
+}
+
+// Cierre de sesión al presionar 'btncerrar'
+if (isset($_POST['btncerrar'])) {
+    $documento = $_SESSION['document'];
+
+    date_default_timezone_set('America/Bogota');
+    $fecha_salida = date('Y-m-d');
+    $hora_salida = date('H:i:s');
+
+    // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
+    $consulta2 = $con->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
+    $consulta2->execute([':documento' => $documento]);
+    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
+
+    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
+    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
+    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
+
+    // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
+    $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
+    // diferencia en segundos se utiliza para calcular la duración formatada
+    $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
+
+    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
+    $consulta3 = $con->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
+    $consulta3->bindParam(":fecha_salida", $fecha_salida);
+    $consulta3->bindParam(":hora_salida", $hora_salida);
+    $consulta3->bindParam(":duracion", $duracion);
+    $consulta3->bindParam(":documento", $documento);
+    $consulta3->bindParam(":codi_ingre", $codi_ingre);
+    $consulta3->execute();
+
+    session_destroy();  // Se cierra la sesión del usuario
+    header("Location:../../../../index.html");
 }
 
 // Obtener todas las categorías
@@ -49,14 +95,14 @@ if ($id_categoria !== null && $id_categoria !== '') {
 <head>
     <title>Tienda Virtual</title>
     <style>
-
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
         }
-            body {
+
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -184,11 +230,15 @@ if ($id_categoria !== null && $id_categoria !== '') {
         <a href="ventas.php">Ventas</a>
         <a href="compras.php">Compra</a>
     </nav>
-    <div clas  s="container">
+    <div class="container">
         <h2>Filtrar Productos por Categoría</h2>
 
         <!-- Mostrar mensaje de bienvenida -->
         <p><?php echo $mensajeBienvenida; ?></p>
+
+        <!-- Botón de redirección -->
+        <button class="redirect-button" onclick="redireccionar()">Ir a Otra Página</button>
+        <button class="redirect-button" onclick="redire()">Editar datos</button>
 
         <form method="post" action="">
             <label for="categoria">Seleccionar Categoría:</label>
@@ -211,7 +261,6 @@ if ($id_categoria !== null && $id_categoria !== '') {
                         // Construir la ruta relativa de la imagen
                         $imagen = $producto['foto'];
                         $ruta_relativa = '../../../assets/img/img_produc/' . $imagen;
-                        
 
                         if (file_exists($ruta_relativa)) {
                         ?>
@@ -221,8 +270,10 @@ if ($id_categoria !== null && $id_categoria !== '') {
                         <?php } ?>
 
                         <div class="product-info">
+                            <h4>Codigo: <?php echo $producto['id_producto']; ?></h4>
                             <h4><?php echo $producto['nom_produc']; ?></h4>
                             <p><?php echo $producto['descrip']; ?></p>
+                            <p>Cantidad: <?php echo $producto['cantidad']; ?></p>
                             <p>Precio: $<?php echo $producto['precio_ven']; ?></p>
                             <p>Código de Barras: <?php echo $producto['codigo_barras']; ?></p>
                             <a href="ventas.php?id=<?php echo $producto['id_producto']; ?>" class="buy-button">Comprar</a>
@@ -242,18 +293,12 @@ if ($id_categoria !== null && $id_categoria !== '') {
     <!-- Botón fijo para cerrar sesión -->
     <button class="fixed-button" onclick="cerrarSesion()">Cerrar Sesión</button>
 
-    <!-- Botón de redirección -->
-    <button class="redirect-button" onclick="redireccionar()">Ir a Otra Página</button>
-
-    <button class="redirect-button" onclick="redire()">Editar datos</button>
-
-
     <script>
         // Función para cerrar la sesión
         function cerrarSesion() {
             // Realiza cualquier lógica necesaria para cerrar la sesión, por ejemplo, limpiar variables de sesión
             // Después redirige a la página de inicio de sesión
-            window.location.href = "index.html";
+            window.location.href = "../../../../index.html";
         }
 
         // Función para redireccionar
@@ -272,4 +317,5 @@ if ($id_categoria !== null && $id_categoria !== '') {
 </html>
 
 </body>
+
 </html>

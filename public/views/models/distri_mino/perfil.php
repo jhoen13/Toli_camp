@@ -46,7 +46,7 @@ if (isset($_SESSION['document'])) {
         $mensajeExito = '¡Actualización exitosa!';
 
         // Redirigir a la página principal después de un breve retraso
-        header("refresh:3;url=index-user.php");
+        header("refresh:3;url=index-vende.php");
     }
 }
 ?>
