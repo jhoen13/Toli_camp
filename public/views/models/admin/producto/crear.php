@@ -123,8 +123,21 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
         echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
         echo '<script> window.location="./crear.php"</script>';
     } else {
-        $insertsql = $conexion->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
-        $insertsql->execute();
+        // Insertar un nuevo registro en la tabla 'ingreso'
+        $insertsql = $conexion->prepare("INSERT INTO productos (codigo_barras, nom_produc, descrip, precio_compra, id_categoria, cantidad, id_embala, foto, precio_ven, documento) VALUES (:id_producto, :nom_produc, :descrip, :precio_compra, :id_categoria, :cantidad, :id_embala, :foto, :precio_ven, :documento)");
+
+        // Obtener el próximo id_ingreso autoincremental antes de la inserción
+        $next_id = null;
+        $consulta_next_id = $conexion->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'toli_camp' AND TABLE_NAME = 'productos'");
+        if ($row = $consulta_next_id->fetch(PDO::FETCH_ASSOC)) {
+            $next_id = $row['AUTO_INCREMENT'];
+        }
+
+        // Ejecutar la inserción con el próximo "id_producto" autoincremental como valor para "codigo_barras"
+        if ($next_id !== null) {
+            $insertsql->execute([':id_producto' => $next_id, ':documento' => $documento, ':nom_produc' => $nom_produc, ':descrip' => $descrip, ':precio_compra' => $precio_compra, ':id_categoria' => $id_categoria, ':cantidad' => $cantidad, ':id_embala' => $id_embala, ':foto' => $foto_nombre, ':precio_ven' => $precio_ven ]);
+        }
+
         echo '<script>alert("Registro Exitoso");</script>';
         echo '<script> window.location="index.php"</script>';
     }
@@ -183,11 +196,12 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     </style>
     <style>
         .modal-body label {
-        font-size: 18px;
-    }
+            font-size: 18px;
+        }
+
         .modal-body input {
-        font-size: 18px;
-    }
+            font-size: 18px;
+        }
     </style>
 
 </head>
@@ -456,7 +470,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                             <div class="card-body">
                                 <div class="row" style="font-size: 25px;">
                                 </div>
-                                <div class="table-responsive" >
+                                <div class="table-responsive">
                                     <h2 class="modal-title" id="exampleModalLabel">Actualizar Producto</h2>
                                     <table id="example3" class="display text-center" style="min-width: 845px">
                                         <form action="" method="post" enctype="multipart/form-data">
@@ -509,7 +523,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
-                                            <button type="submit" name="registro" value="formu" class="btn_ing btn btn-margin col-4 mx-auto" style="background-color: #0097B2; color: #ffff;">CREAR PRODUCTO</button>  
+                                                <button type="submit" name="registro" value="formu" class="btn_ing btn btn-margin col-4 mx-auto" style="background-color: #0097B2; color: #ffff;">CREAR PRODUCTO</button>
                                             </div>
                                         </form>
                                     </table>
@@ -560,67 +574,67 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
 
 <!-- <?php
-require_once("../../../../db/conexion.php");
-$db = new database();
-$conectar = $db->conectar();
-session_start();
+        require_once("../../../../db/conexion.php");
+        $db = new database();
+        $conectar = $db->conectar();
+        session_start();
 
-// Consulta para obtener las categorías
-$stmCategorias = $conectar->prepare("SELECT id_categoria, categoria FROM categoria");
-$stmCategorias->execute();
-$categorias = $stmCategorias->fetchAll(PDO::FETCH_ASSOC);
+        // Consulta para obtener las categorías
+        $stmCategorias = $conectar->prepare("SELECT id_categoria, categoria FROM categoria");
+        $stmCategorias->execute();
+        $categorias = $stmCategorias->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta para obtener los documentos relacionados con los roles de administrador y vendedor
-$stmDocumentos = $conectar->prepare("SELECT documento FROM usuarios WHERE id_rol IN ('1 administrador', '3 vendedor')");
-$stmDocumentos->execute();
-$documentos = $stmDocumentos->fetchAll(PDO::FETCH_ASSOC);
+        // Consulta para obtener los documentos relacionados con los roles de administrador y vendedor
+        $stmDocumentos = $conectar->prepare("SELECT documento FROM usuarios WHERE id_rol IN ('1 administrador', '3 vendedor')");
+        $stmDocumentos->execute();
+        $documentos = $stmDocumentos->fetchAll(PDO::FETCH_ASSOC);
 
-$stmembalaje = $conectar->prepare("SELECT id_embala, embalaje FROM embalaje");
-$stmembalaje->execute();
-$embalaje = $stmembalaje->fetchAll(PDO::FETCH_ASSOC);
+        $stmembalaje = $conectar->prepare("SELECT id_embala, embalaje FROM embalaje");
+        $stmembalaje->execute();
+        $embalaje = $stmembalaje->fetchAll(PDO::FETCH_ASSOC);
 
-if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
-    $nom_produc = $_POST['nom_produc'];
-    $descrip = $_POST['descrip'];
-    $precio_compra = $_POST['precio_compra'];
-    $disponibles = $_POST['disponibles'];
-    $id_categoria = $_POST['id_categoria'];
-    $cantidad = $_POST['cantidad'];
-    $id_embala = $_POST['id_embala'];
+        if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
+            $nom_produc = $_POST['nom_produc'];
+            $descrip = $_POST['descrip'];
+            $precio_compra = $_POST['precio_compra'];
+            $disponibles = $_POST['disponibles'];
+            $id_categoria = $_POST['id_categoria'];
+            $cantidad = $_POST['cantidad'];
+            $id_embala = $_POST['id_embala'];
 
-    // Verifica si se ha enviado un archivo
-    if (!empty($_FILES['foto']['name'])) {
-        $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-        $nombre = "producto_" . time();
-        $foto_nombre = $nombre . "." . $extension;
-        $ruta_destino = "../../../../assets/img/img_produc/$foto_nombre";
+            // Verifica si se ha enviado un archivo
+            if (!empty($_FILES['foto']['name'])) {
+                $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+                $nombre = "producto_" . time();
+                $foto_nombre = $nombre . "." . $extension;
+                $ruta_destino = "../../../../assets/img/img_produc/$foto_nombre";
 
-        // Mueve el archivo a la ruta de destino
-        move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
-    } else {
-        // Si no se envió un archivo, muestra un mensaje de error y redirige
-        echo '<script>alert("No se ha seleccionado una imagen"); window.location="index.php"</script>';
-        exit(); // Detiene la ejecución del script
-    }
+                // Mueve el archivo a la ruta de destino
+                move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
+            } else {
+                // Si no se envió un archivo, muestra un mensaje de error y redirige
+                echo '<script>alert("No se ha seleccionado una imagen"); window.location="index.php"</script>';
+                exit(); // Detiene la ejecución del script
+            }
 
-    $precio_ven = $_POST['precio_ven'];
-    $documento = $_POST['documento'];
+            $precio_ven = $_POST['precio_ven'];
+            $documento = $_POST['documento'];
 
-    $validar = $conectar->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
-    $validar->execute();
-    $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
+            $validar = $conectar->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
+            $validar->execute();
+            $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $disponibles == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto_nombre == "" || $precio_ven == "" || $documento == "") {
-        echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
-        echo '<script> window.location="./crear.php"</script>';
-    } else {
-        $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,disponibles,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra', '$disponibles','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
-        $insertsql->execute();
-        echo '<script>alert("Registro Exitoso");</script>';
-        echo '<script> window.location="index.php"</script>';
-    }
-}
-?>
+            if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $disponibles == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto_nombre == "" || $precio_ven == "" || $documento == "") {
+                echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
+                echo '<script> window.location="./crear.php"</script>';
+            } else {
+                $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,disponibles,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra', '$disponibles','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
+                $insertsql->execute();
+                echo '<script>alert("Registro Exitoso");</script>';
+                echo '<script> window.location="index.php"</script>';
+            }
+        }
+        ?>
 
 <!DOCTYPE html>
 <html lang="en">
