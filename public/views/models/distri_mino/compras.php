@@ -257,9 +257,9 @@ if (isset($_POST['boton_volver'])) {
     }
     ?>
     <br>
-    <form method="post" action="./agregarAlCarrito.php">
-        <label for="id_producto">Búsqueda por nombre:</label>
-        <div class="ui-widget">
+        <form method="post" action="./agregarAlCarrito.php">
+            <label for="id_producto">Búsqueda por nombre:</label>
+            <div class="ui-widget">
             <select name="id_producto" id="combobox">
                 <option value>Select one...</option>
                 <?php while ($prodsrows = $prods->fetch()) { ?>
