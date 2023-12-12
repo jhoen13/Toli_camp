@@ -14,9 +14,9 @@ $cliente = $conexion->prepare("SELECT documento, nombre FROM usuarios WHERE id_r
 $cliente->execute();
 $selectcliente = $cliente->fetchAll();
 
-$idventa = $conexion->prepare("SELECT * FROM compras ORDER BY id_compra DESC limit 1");
+$idventa = $conexion->prepare("SELECT id_compra FROM compras ORDER BY id_compra DESC LIMIT 1");
 $idventa->execute();
-$id = $idventa->fetch();
+$id = $idventa->fetch(PDO::FETCH_ASSOC); // Usamos FETCH_ASSOC para obtener un array asociativo
 
 $documento = $_SESSION['document'];
 $prods = $conexion->prepare("SELECT * FROM productos WHERE documento = '$documento'");
@@ -207,8 +207,8 @@ if (isset($_POST['boton_volver'])) {
         <button name="boton_volver" class="btn btn-warning btn-atras">Atras</button>
     </form><br>
     <h1 style="text-align:left; color:white; font-weight:700; font-size:43px">NUEVA COMPRA
-        <?php if ($id) {
-            echo '#' . $id['id'] + 1;
+        <?php if ($id && isset($id['id_compra'])) {
+            echo '#' . ($id['id_compra'] + 1);
         } else {
             echo '#1';
         } ?> <b style="font-size:43px; float: right;">

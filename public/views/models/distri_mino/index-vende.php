@@ -25,41 +25,6 @@ if (isset($_SESSION['document'])) {
     exit(); // Agrega un exit() para detener la ejecución del script en este punto
 }
 
-// Cierre de sesión al presionar 'btncerrar'
-if (isset($_POST['btncerrar'])) {
-    $documento = $_SESSION['document'];
-
-    date_default_timezone_set('America/Bogota');
-    $fecha_salida = date('Y-m-d');
-    $hora_salida = date('H:i:s');
-
-    // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
-    $consulta2 = $con->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
-    $consulta2->execute([':documento' => $documento]);
-    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
-
-    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
-    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
-    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
-
-    // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
-    $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
-    // diferencia en segundos se utiliza para calcular la duración formatada
-    $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
-
-    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
-    $consulta3 = $con->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
-    $consulta3->bindParam(":fecha_salida", $fecha_salida);
-    $consulta3->bindParam(":hora_salida", $hora_salida);
-    $consulta3->bindParam(":duracion", $duracion);
-    $consulta3->bindParam(":documento", $documento);
-    $consulta3->bindParam(":codi_ingre", $codi_ingre);
-    $consulta3->execute();
-
-    session_destroy();  // Se cierra la sesión del usuario
-    header("Location:../../../../index.html");
-}
-
 // Obtener todas las categorías
 $sql_categorias = $con->query("SELECT * FROM categoria");
 $categorias = $sql_categorias->fetchAll(PDO::FETCH_ASSOC);
@@ -225,10 +190,11 @@ if ($id_categoria !== null && $id_categoria !== '') {
 <body>
     <nav>
         <a href="#inicio">Inicio</a>
-        <a href="clientes.php">Clientes</a>
-        <a href="crearproduc.php">Productos</a>
-        <a href="ventas.php">Ventas</a>
-        <a href="compras.php">Compra</a>
+        <a href="./clientes.php">Clientes</a>
+        <a href="./listado-prod.php">Productos</a>
+        <a href="./ventas.php">Ventas</a>
+        <a href="./reporteventa.php">Reporte ventas</a>
+        <a href="./compras.php">Compra</a>
     </nav>
     <div class="container">
         <h2>Filtrar Productos por Categoría</h2>
@@ -275,8 +241,8 @@ if ($id_categoria !== null && $id_categoria !== '') {
                             <p><?php echo $producto['descrip']; ?></p>
                             <p>Cantidad: <?php echo $producto['cantidad']; ?></p>
                             <p>Precio: $<?php echo $producto['precio_ven']; ?></p>
-                            <p>Código de Barras: <?php echo $producto['codigo_barras']; ?></p>
-                            <a href="ventas.php?id=<?php echo $producto['id_producto']; ?>" class="buy-button">Comprar</a>
+                            <img src="barcode.php?text=<?php echo $producto['barcode'] ?>&size=40&codetype=Code128&print=true" />
+                            <br><br><a href="ventas.php?id=<?php echo $producto['id_producto']; ?>" class="buy-button">Comprar</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
