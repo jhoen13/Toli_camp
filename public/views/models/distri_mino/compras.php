@@ -10,7 +10,7 @@ if (!isset($_SESSION["carrito"]))
     $_SESSION["carrito"] = [];
 $granTotal = 0;
 
-$cliente = $conexion->prepare("SELECT documento, nombre FROM usuarios WHERE id_rol = 2");
+$cliente = $conexion->prepare("SELECT documento, nombre FROM usuarios WHERE id_rol = 4");
 $cliente->execute();
 $selectcliente = $cliente->fetchAll();
 
@@ -220,13 +220,13 @@ if (isset($_POST['boton_volver'])) {
         if ($_GET["status"] === "1") {
     ?>
             <div class="alert alert-success">
-                <strong>¡Correcto!</strong> Venta realizada correctamente
+                <strong>¡Correcto!</strong> Compra realizada correctamente
             </div>
         <?php
         } else if ($_GET["status"] === "2") {
         ?>
             <div class="alert alert-info">
-                <strong>Venta cancelada</strong>
+                <strong>Compra cancelada</strong>
             </div>
         <?php
         } else if ($_GET["status"] === "3") {
