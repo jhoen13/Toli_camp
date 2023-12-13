@@ -235,11 +235,7 @@ if ((isset($_POST["btn-registrar"]))) {
   }
 
   function minuscula(e) {
-    // Convertir letras mayúsculas a minúsculas
     e.value = e.value.toLowerCase();
-
-    // Permitir espacios
-    e.value = e.value.replace(/ /g, '');
   }
 
   function numeros(e) {
@@ -250,18 +246,6 @@ if ((isset($_POST["btn-registrar"]))) {
   function espacios(e) {
     e.value = e.value.replace(/ /g, '');
   }
-
-  function espacios(e) {
-    // Reemplazar números por una cadena vacía
-    e.value = e.value.replace(/\d/g, '');
-
-    // Convertir letras mayúsculas a minúsculas
-    e.value = e.value.toLowerCase();
-
-    // Permitir espacios
-    e.value = e.value.replace(/ /g, '');
-  }
-
 
   // <!-- FUNCION DE JAVASCRIPT QUE PERMITE INGRESAR SOLO NUMEROS EN EL FORMULARIO ASIGNADO -->
   function multiplenumber(e) {
