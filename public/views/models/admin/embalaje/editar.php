@@ -177,7 +177,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -379,8 +379,8 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../roles/index.php">Lista Roles</a></li>
-                            <li><a href="../roles/crear.php">Crear Roles</a></li>
+                            <li><a href="../producto/index.php">Lista Productos</a></li>
+                            <li><a href="../producto/crear.php">Crear Productos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ROLES -->

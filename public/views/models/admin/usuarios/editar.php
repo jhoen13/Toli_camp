@@ -1,18 +1,19 @@
 <?php
-session_start(); // Iniciar la sesión
+// Iniciar la sesión
+session_start();
 
-// Se importa el archivo de conexión a la base de datos
+// Incluir el archivo de conexión a la base de datos
 require_once("../../../../db/conexion.php");
 
-// Se instancia la clase Database para la conexión a la base de datos
+// Instanciar la clase Database para la conexión a la base de datos
 $db = new database();
 $conexion = $db->conectar();
 
-// Asegúrate de que la sesión esté iniciada y que 'document' esté definida
+// Asegurarse de que la sesión esté iniciada y que 'document' esté definida
 if (isset($_SESSION['document'])) {
     $documento = $_SESSION['document'];
 
-    // Corrige la consulta SQL
+    // Corregir la consulta SQL
     $sql = $conexion->prepare("SELECT * FROM usuarios AS u
         JOIN roles AS r ON u.id_rol = r.id_rol
         WHERE u.documento = :documento");
@@ -45,7 +46,7 @@ if (isset($_POST['btncerrar'])) {
 
     // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
     $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
-    // diferencia en segundos se utiliza para calcular la duración formatada
+    // diferencia en segundos se utiliza para calcular la duración formateada
     $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
 
     // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
@@ -61,11 +62,12 @@ if (isset($_POST['btncerrar'])) {
     header("Location:../../../../../index.html");
 }
 
-// Obtiene el documento de la sesión del usuario
+// Obtener el documento de la sesión del usuario
 $document = $_SESSION['document'];
 
 // Consulta SQL para obtener la información del usuario logueado
-$user = $conexion->prepare("SELECT * FROM usuarios WHERE documento = '$document'");
+$user = $conexion->prepare("SELECT * FROM usuarios WHERE documento = :document");
+$user->bindParam(":document", $document, PDO::PARAM_STR);
 $user->execute();
 $respuesta = $user->fetch(PDO::FETCH_ASSOC);
 
@@ -129,9 +131,8 @@ if (isset($_POST["btn-actualizar"])) {
         // Mueve el archivo a la ruta de destino
         move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
     } else {
-        // Si no se envió un archivo, muestra un mensaje de error y redirige
-        echo '<script>alert("No se ha seleccionado una imagen"); window.location="./index.php"</script>';
-        exit(); // Detiene la ejecución del script
+        // Si no se envió un archivo, utiliza el nombre actual de la foto
+        $foto_nombre = $datosUsuario['foto'];
     }
 
     // Consulta de actualización
@@ -159,6 +160,7 @@ if (isset($_POST["btn-actualizar"])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -223,7 +225,7 @@ if (isset($_POST["btn-actualizar"])) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -386,7 +388,7 @@ if (isset($_POST["btn-actualizar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../categoria/index.php">Lista Categorias</a></li>
-                            <li><a href="../categoria/crear.php">crear Categorias</a></li>
+                            <li><a href="../categoria/crear.php">Crear Categorias</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE DOCUMENTOS -->
@@ -396,7 +398,7 @@ if (isset($_POST["btn-actualizar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../documentos/index.php">Lista Documentos</a></li>
-                            <li><a href="../documentos/crear.php">crear Documentos</a></li>
+                            <li><a href="../documentos/crear.php">Crear Documentos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE EMBALAJE -->
@@ -406,7 +408,7 @@ if (isset($_POST["btn-actualizar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../embalaje/index.php">Listar Embalaje</a></li>
-                            <li><a href="../embalaje/crear.php">crear Embalaje</a></li>
+                            <li><a href="../embalaje/crear.php">Crear Embalaje</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE GENEROS -->
@@ -416,7 +418,7 @@ if (isset($_POST["btn-actualizar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../genero/index.php">Lista Generos</a></li>
-                            <li><a href="../genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -425,8 +427,8 @@ if (isset($_POST["btn-actualizar"])) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../producto/producto.php">Lista Productos</a></li>
-                            <li><a href="../producto/crear.php">crear Productos</a></li>
+                            <li><a href="../producto/index.php">Lista Productos</a></li>
+                            <li><a href="../producto/crear.php">Crear Productos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ROLES -->
@@ -437,7 +439,7 @@ if (isset($_POST["btn-actualizar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../roles/index.php">Lista Roles</a></li>
-                            <li><a href="../roles/crear.php">crear Roles</a></li>
+                            <li><a href="../roles/crear.php">Crear Roles</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ESTADISTICAS

@@ -260,6 +260,11 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                 </div>
                 <div class="container-fluid">
                     <div class="container-flat-form">
+                    <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
+                        <a href="index-distriMayo.php" style="color: #0097B2;" class="d-flex align-items-center">
+                            <i class="fas fa-arrow-left mr-2 fa-2x"></i>
+                        </a>
+                    </button>
                         <div class="title-flat-form title-flat-blue">Nueva venta</div>
                         <form action="ventas.php" method="post" class="row">
                             <div class="col-12 col-md-8">
@@ -268,7 +273,7 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                     <select class="form-control" name="producto" id="producto" required>
                                         <option value="" disabled selected>SELECCIONE PRODUCTO</option>
                                         <?php
-                                        $sql_products = $con->prepare("SELECT * FROM productos");
+                                        $sql_products = $con->prepare("SELECT * FROM productos ");
                                         $sql_products->execute();
                                         foreach ($sql_products as $fila) {
                                         ?>

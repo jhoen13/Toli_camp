@@ -178,7 +178,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -341,7 +341,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../categoria/index.php">Lista Categorias</a></li>
-                            <li><a href="../categoria/crear.php">crear Categorias</a></li>
+                            <li><a href="../categoria/crear.php">Crear Categorias</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE DOCUMENTOS -->
@@ -351,7 +351,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../documentos/index.php">Lista Documentos</a></li>
-                            <li><a href="../documentos/crear.php">crear Documentos</a></li>
+                            <li><a href="../documentos/crear.php">Crear Documentos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE EMBALAJE -->
@@ -361,7 +361,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../embalaje/index.php">Listar Embalaje</a></li>
-                            <li><a href="../embalaje/crear.php">crear Embalaje</a></li>
+                            <li><a href="../embalaje/crear.php">Crear Embalaje</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE GENEROS -->
@@ -371,7 +371,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="#">Lista Generos</a></li>
-                            <li><a href="./crear.php">crear Generos</a></li>
+                            <li><a href="./crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -381,7 +381,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../producto/index.php">Lista Productos</a></li>
-                            <li><a href="../producto/crear.php">crear Productos</a></li>
+                            <li><a href="../producto/crear.php">Crear Productos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ROLES -->
@@ -392,10 +392,10 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../roles/index.php">Lista Roles</a></li>
-                            <li><a href="../roles/crear.php">crear Roles</a></li>
+                            <li><a href="../roles/crear.php">Crear Roles</a></li>
                         </ul>
                     </li>
-                    <!-- MODULO DE ESTADISTICAS -->
+                    <!-- MODULO DE ESTADISTICAS
                     <li><a class="has-arrow " href="javascript:void()" aria-expanded="false">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">ESTADISTICAS</span>
@@ -405,7 +405,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                             <li><a href="#">Usuarios Bloqueados</a></li>
                         </ul>
 
-                    </li>
+                    </li> -->
                 </ul>
                 <!-- FOOTER -->
                 <div class="copyright">

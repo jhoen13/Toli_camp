@@ -23,7 +23,6 @@ function generarIDVenta()
     return date('Ymd') . $random_number; // Concatenar el número aleatorio con la fecha actual
 }
 
-// Modificación: Si no hay un ID de venta ingresado, generarlo automáticamente
 if (isset($_POST['agregar']) && isset($_POST['producto']) && isset($_POST['cantidad'])) {
     $id_producto = $_POST['producto'];
     $cantidad = $_POST['cantidad'];
@@ -80,8 +79,8 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
     // Obtener el documento del usuario al que se va a vender
     $docu_usuario = $_POST['usuario'];
 
-    // Modificación: Generar el ID de venta automáticamente
-    $id_venta = generarIDVenta();
+    // Obtener el ID de la venta manualmente ingresado por el usuario
+    $id_venta = $_POST['id_venta'];
 
     // Calcular el total de la venta y guardar los detalles en la tabla detalle_venta
     $total_venta = 0;
@@ -214,31 +213,6 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
 </head>
 
 <body>
-    <div class="navbar-lateral full-reset">
-        <div class="visible-xs font-movile-menu mobile-menu-button"></div>
-        <div class="full-reset container-menu-movile custom-scroll-containers">
-            <div class="logo full-reset all-tittles">
-            </div>
-            <div class="full-reset" style="padding: 10px 0; color:#fff;">
-                <p class="text-center" style="padding-top: 15px;">Menu</p>
-            </div>
-            <div class="dropdown-menu-button">&nbsp;&nbsp; Compras</div>
-            <ul class="list-unstyled">
-                <li><a href="compras.php">&nbsp;&nbsp; Nueva compra</a></li>
-                <li><a href="miscompras.php">&nbsp;&nbsp; Mis compras</a></li>
-            </ul>
-            </li>
-            <li>
-                <div class="dropdown-menu-button">&nbsp;&nbsp; Ventas</div>
-                <ul class="list-unstyled">
-                    <li><a href="ventas.php">&nbsp;&nbsp; Nueva venta</a></li>
-                    <li><a href="misventas.php">&nbsp;&nbsp; Mis ventas</a></li>
-                </ul>
-            </li>
-            <li><a href="inventario.php">&nbsp;&nbsp; Inventario</a></li>
-            <li><a href="reporte.php">&nbsp;&nbsp; Reportes</a></li>
-            </ul>
-        </div>
     </div>
     </div>
 
@@ -252,8 +226,8 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                     <div class="row">
                         <div class="col-12 lead">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active">Nueva venta</li>
-                                <li class="breadcrumb-item"><a href="listaven.php">Listado de ventas</a></li>
+                                <li class="breadcrumb-item active"></li>
+                                <li class="breadcrumb-item"><a href="index-vende.php">Volver</a></li>
                             </ol>
                         </div>
                     </div>
@@ -322,7 +296,10 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                         ?>
                                     </select>
                                 </div>
-                                
+                                <div class="form-group">
+                                    <label for="id_venta">ID Venta</label>
+                                    <input class="form-control" name="id_venta" type="text" placeholder="Ingrese el ID de la venta" required>
+                                </div>
                                 <button type="submit" name="terminar_venta" class="btn btn-success">Terminar Venta</button>
                             </form>
                         <?php } ?>
@@ -371,6 +348,7 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                     </tr>
                                 </tfoot>
                             </table>
+                            
                         <?php } ?>
                     </div>
                 </div>

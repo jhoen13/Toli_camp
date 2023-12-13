@@ -74,44 +74,22 @@ $userEntry = $conexion->prepare("SELECT * FROM ingreso INNER JOIN usuarios INNER
 $userEntry->execute();
 $entry = $userEntry->fetchAll(PDO::FETCH_ASSOC);
 
-$categoria = '';
-$old_categoria = '';
-
-if (isset($_GET['id_categoria'])) {
-    // Obtener la categoría existente si se proporciona un ID
-    $id_categoria = $_GET['id_categoria'];
-    $stmt = $conexion->prepare("SELECT * FROM categoria WHERE id_categoria = :id_categoria");
-    $stmt->bindParam(':id_categoria', $id_categoria);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        $old_categoria = $result['categoria'];
-    }
-}
 
 if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $categoria = $_POST['categoria'];
 
-    $validar = $conexion->prepare("SELECT * FROM categoria WHERE categoria = :categoria");
-    $validar->bindParam(':categoria', $categoria);
+    $validar = $conexion->prepare("SELECT * FROM categoria WHERE categoria = '$categoria'");
     $validar->execute();
     $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
 
     if ($categoria == "") {
         echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
         echo '<script> window.location="index.php"</script>';
-    } elseif (count($filaa1) > 0) {
-        echo '<script> alert ("La categoría ya existe");</script>';
-        echo '<script> window.location="index.php"</script>';
-    } else {
-        // Actualización
-        $updatesql = $conexion->prepare("UPDATE categoria SET categoria = :categoria WHERE id_categoria = :id_categoria");
-        $updatesql->bindParam(':categoria', $categoria);
-        $updatesql->bindParam(':id_categoria', $id_categoria);
-        $updatesql->execute();
-
-        echo '<script>alert("Actualización Exitosa");</script>';
+    } 
+     else {
+        $insertsql = $conexion->prepare("INSERT INTO categoria (categoria) VALUES ( '$categoria');");
+        $insertsql->execute();
+        echo '<script>alert("Registro Exitoso");</script>';
         echo '<script> window.location="index.php"</script>';
     }
 }
@@ -165,6 +143,14 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
         /* end ocultar texto de icono */
     </style>
+    <style>
+        .modal-body label {
+        font-size: 18px;
+    }
+        .modal-body input {
+        font-size: 18px;
+    }
+    </style>
 </head>
 
 
@@ -174,7 +160,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -367,7 +353,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../genero/index.php">Lista Generos</a></li>
-                            <li><a href="../genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -429,10 +415,10 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                                 <div class="table-responsive">
                                 <h2 class="modal-title" id="exampleModalLabel">Crear Categoria</h2>
                                     <table id="example3" class="display text-center" style="min-width: 845px">
-                                        <form action="" method="post">
+                                        <form action="" method="post" > 
                                             <div class="modal-body">
-                                                <label for="categoria">Nombre De la Categoría</label>
-                                                <input id="categoria" type="text" class="form-control" name="categoria" value="<?php echo $old_categoria; ?>" placeholder="Ingresa una categoría" required>
+                                                <label for="categoria">Nombre De la categoria </label>
+                                                <input id="categoria" type="text" class="form-control" name="categoria" placeholder="Ingresa una categoria">
                                             </div>
                                             <div class="modal-footer">
                                             <button type="submit" name="registro" value="formu" class="btn_ing btn btn-margin col-4 mx-auto" style="background-color: #0097B2; color: #ffff;">CREAR CATEGORIA</button> 

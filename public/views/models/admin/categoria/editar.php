@@ -73,7 +73,6 @@ $respuesta = $user->fetch(PDO::FETCH_ASSOC);
 $userEntry = $conexion->prepare("SELECT * FROM ingreso INNER JOIN usuarios INNER JOIN roles ON ingreso.documento = usuarios.documento AND usuarios.id_rol = roles.id_rol WHERE roles.id_rol >= 1 ORDER BY ingreso.id_ingreso DESC LIMIT 10");
 $userEntry->execute();
 $entry = $userEntry->fetchAll(PDO::FETCH_ASSOC);
-
 $categoria = '';
 $old_categoria = '';
 
@@ -167,6 +166,14 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
         /* end ocultar texto de icono */
     </style>
+    <style>
+        .modal-body label {
+        font-size: 18px;
+    }
+        .modal-body input {
+        font-size: 18px;
+    }
+    </style>
 </head>
 
 
@@ -176,7 +183,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -369,7 +376,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../genero/index.php">Lista Generos</a></li>
-                            <li><a href="../genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -483,172 +490,3 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 </html>
 
 
-
-<!-- <?php
-require_once("../../../../db/conexion.php");
-$db = new database();
-$conexion = $db->conectar();
-session_start();
-?>
-
-<?php
-$stm = $conexion->prepare("SELECT * FROM categoria");
-$stm->execute();
-$categoria = $stm->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<?php
-if (isset($_GET['id_categoria'])) {
-    $txtid = $_GET['id_categoria'];
-
-    $stm = $conexion->prepare("DELETE FROM categoria WHERE id_categoria = :id_categoria");
-    $stm->bindParam(":id_categoria", $txtid, PDO::PARAM_INT);
-    $stm->execute();
-
-    // Redirige después de realizar la eliminación
-    header("location: index.php");
-    
-}
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de la categorias </title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="../../../controller/img/icono.png" type="image/x-icon">
-    <style>
-        /* Estilos personalizados para centrar la tabla */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100;
-            margin: 0;
-        }
-
-        /* Estilos para los botones */
-        .btn-margin {
-            margin: 10px;
-        }
-    </style>
-</head>
-<body>
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th scope="col">ID categoria </th>
-                <th scope="col">Categoria del producto </th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($categoria as $catego) { ?>
-                <tr>
-                    <td scope="row"><?php echo $catego['id_categoria']; ?></td>
-                    <td><?php echo $catego['categoria']; ?></td>
-                    <td>
-                        <a href="editar.php?id_categoria=<?php echo $catego['id_categoria']; ?> " class="btn btn-success">Editar</a>
-                        <a href="index.php?id_categoria=<?php echo $catego['id_categoria']; ?>" class="btn btn-danger">Eliminar</a>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-        
-    </table>
-    <a href="crear.php" class="btn btn-success btn-margin">Crear una categoria</a>
-    <a href="../../../../views/models/admin/index-admin.php" class="btn btn-primary btn-margin">Volver</a></div>
-
-</body>
-</html> -->
-
-
-<!-- <?php
-require_once("../../../../db/conexion.php");
-$db = new database();
-$conectar = $db->conectar();
-session_start();
-
-$categoria = '';
-$old_categoria = '';
-
-if (isset($_GET['id_categoria'])) {
-    // Obtener la categoría existente si se proporciona un ID
-    $id_categoria = $_GET['id_categoria'];
-    $stmt = $conectar->prepare("SELECT * FROM categoria WHERE id_categoria = :id_categoria");
-    $stmt->bindParam(':id_categoria', $id_categoria);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        $old_categoria = $result['categoria'];
-    }
-}
-
-if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
-    $categoria = $_POST['categoria'];
-
-    $validar = $conectar->prepare("SELECT * FROM categoria WHERE categoria = :categoria");
-    $validar->bindParam(':categoria', $categoria);
-    $validar->execute();
-    $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($categoria == "") {
-        echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
-        echo '<script> window.location="index.php"</script>';
-    } elseif (count($filaa1) > 0) {
-        echo '<script> alert ("La categoría ya existe");</script>';
-        echo '<script> window.location="index.php"</script>';
-    } else {
-        // Actualización
-        $updatesql = $conectar->prepare("UPDATE categoria SET categoria = :categoria WHERE id_categoria = :id_categoria");
-        $updatesql->bindParam(':categoria', $categoria);
-        $updatesql->bindParam(':id_categoria', $id_categoria);
-        $updatesql->execute();
-
-        echo '<script>alert("Actualización Exitosa");</script>';
-        echo '<script> window.location="index.php"</script>';
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="shortcut icon" href="../../../controller/img/icono.png" type="image/x-icon">
-    <title>Formulario de actualización de categorías</title>
-</head>
-<body>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Actualizar Categoría</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" times="" ></span>
-                </button>
-            </div>
-            <form action="" method="post">
-                <div class="modal-body">
-                    <label for="categoria">Nombre De la Categoría</label>
-                    <input id="categoria" type="text" class="form-control" name="categoria" value="<?php echo $old_categoria; ?>" placeholder="Ingresa una categoría" required>
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" value="Actualizar Categoría">
-                    <input type="hidden" name="registro" value="formu">
-                    <a href="index.php" class="btn btn-primary btn-margin">Volver</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html> -->

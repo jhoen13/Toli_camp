@@ -89,6 +89,10 @@ $stmembalaje = $conexion->prepare("SELECT id_embala, embalaje FROM embalaje");
 $stmembalaje->execute();
 $embalaje = $stmembalaje->fetchAll(PDO::FETCH_ASSOC);
 
+$consulta = $conexion->prepare("SELECT nom_produc, barcode FROM productos");
+$consulta->execute();
+$resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
 if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $nom_produc = $_POST['nom_produc'];
     $descrip = $_POST['descrip'];
@@ -114,6 +118,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
     $precio_ven = $_POST['precio_ven'];
     $documento = $_POST['documento'];
+    $barcode = $_POST['barcode'];
 
     $validar = $conexion->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
     $validar->execute();
@@ -123,24 +128,24 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
         echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
         echo '<script> window.location="./crear.php"</script>';
     } else {
-        // Insertar un nuevo registro en la tabla 'ingreso'
-        $insertsql = $conexion->prepare("INSERT INTO productos (codigo_barras, nom_produc, descrip, precio_compra, id_categoria, cantidad, id_embala, foto, precio_ven, documento) VALUES (:id_producto, :nom_produc, :descrip, :precio_compra, :id_categoria, :cantidad, :id_embala, :foto, :precio_ven, :documento)");
-
-        // Obtener el próximo id_ingreso autoincremental antes de la inserción
-        $next_id = null;
-        $consulta_next_id = $conexion->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'toli_camp' AND TABLE_NAME = 'productos'");
-        if ($row = $consulta_next_id->fetch(PDO::FETCH_ASSOC)) {
-            $next_id = $row['AUTO_INCREMENT'];
-        }
-
-        // Ejecutar la inserción con el próximo "id_producto" autoincremental como valor para "codigo_barras"
-        if ($next_id !== null) {
-            $insertsql->execute([':id_producto' => $next_id, ':documento' => $documento, ':nom_produc' => $nom_produc, ':descrip' => $descrip, ':precio_compra' => $precio_compra, ':id_categoria' => $id_categoria, ':cantidad' => $cantidad, ':id_embala' => $id_embala, ':foto' => $foto_nombre, ':precio_ven' => $precio_ven ]);
-        }
-
+        $insertsql = $conexion->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,id_categoria,cantidad,id_embala,foto,precio_ven,documento,barcode) VALUES ( '$nom_produc','$descrip', '$precio_compra','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento','$barcode');");
+        $insertsql->execute();
         echo '<script>alert("Registro Exitoso");</script>';
         echo '<script> window.location="index.php"</script>';
+
+        // Obtener el último ID insertado
+        $id = $pdo->lastInsertId();
+
+        // Generar código con el último ID y milisegundos
+        $codigo = $id . date('is');
+
+        // Actualizar el producto con el código generado
+        $actualizarCodigo = $pdo->prepare("UPDATE productos SET barcode = :codigo WHERE id_producto = :id");
+        $actualizarCodigo->bindParam(':barcode', $barcode, PDO::PARAM_STR);
+        $actualizarCodigo->bindParam(':id', $id, PDO::PARAM_INT);
+        $actualizarCodigo->execute();
     }
+    
 }
 ?>
 
@@ -196,12 +201,11 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     </style>
     <style>
         .modal-body label {
-            font-size: 18px;
-        }
-
+        font-size: 18px;
+    }
         .modal-body input {
-            font-size: 18px;
-        }
+        font-size: 18px;
+    }
     </style>
 
 </head>
@@ -213,7 +217,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -470,8 +474,8 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                             <div class="card-body">
                                 <div class="row" style="font-size: 25px;">
                                 </div>
-                                <div class="table-responsive">
-                                    <h2 class="modal-title" id="exampleModalLabel">Actualizar Producto</h2>
+                                <div class="table-responsive" >
+                                    <h2 class="modal-title" id="exampleModalLabel">Crear Producto</h2>
                                     <table id="example3" class="display text-center" style="min-width: 845px">
                                         <form action="" method="post" enctype="multipart/form-data">
                                             <div class="modal-body">
@@ -515,6 +519,10 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                                                 <input id="precio_ven" type="number" class="form-control" name="precio_ven" placeholder="Ingresa el precio de venta del Producto">
                                             </div>
                                             <div class="modal-body">
+                                                <label for="barcode">Codigo de barras</label>
+                                                <input id="barcode" type="number" class="form-control" name="barcode" placeholder="Ingresa el codigo de barras">
+                                            </div>
+                                            <div class="modal-body">
                                                 <label for="documento">Documento</label>
                                                 <select id="documento" class="form-control" name="documento">
                                                     <?php foreach ($documentos as $doc) { ?>
@@ -523,7 +531,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="submit" name="registro" value="formu" class="btn_ing btn btn-margin col-4 mx-auto" style="background-color: #0097B2; color: #ffff;">CREAR PRODUCTO</button>
+                                            <button type="submit" name="registro" value="formu" class="btn_ing btn btn-margin col-4 mx-auto" style="background-color: #0097B2; color: #ffff;">CREAR PRODUCTO</button>  
                                             </div>
                                         </form>
                                     </table>
@@ -568,73 +576,99 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
 </html>
 
+<script src="JsBarcode.all.min.js"></script>
+<script type="text/javascript">
+    function arrayjsonbarcode(j) {
+        json = JSON.parse(j);
+        arr = [];
+        for (var x in json) {
+            arr.push(json[x]);
+        }
+        return arr;
+    }
+
+    jsonvalor = '<?php echo json_encode($arrayCodigos); ?>';
+    valores = arrayjsonbarcode(jsonvalor);
+
+    for (var i = 0; i < valores.length; i++) {
+        JsBarcode("#barcode" + valores[i], valores[i].toString(), {
+            format: "CODE128", // Cambiado a CODE128, ajusta el formato según tus necesidades
+            lineColor: "#000",
+            width: 2,
+            height: 30,
+            displayValue: true
+        });
+    }
+</script>
+
+
 
 
 
 
 
 <!-- <?php
-        require_once("../../../../db/conexion.php");
-        $db = new database();
-        $conectar = $db->conectar();
-        session_start();
+require_once("../../../../db/conexion.php");
+$db = new database();
+$conectar = $db->conectar();
+session_start();
 
-        // Consulta para obtener las categorías
-        $stmCategorias = $conectar->prepare("SELECT id_categoria, categoria FROM categoria");
-        $stmCategorias->execute();
-        $categorias = $stmCategorias->fetchAll(PDO::FETCH_ASSOC);
+// Consulta para obtener las categorías
+$stmCategorias = $conectar->prepare("SELECT id_categoria, categoria FROM categoria");
+$stmCategorias->execute();
+$categorias = $stmCategorias->fetchAll(PDO::FETCH_ASSOC);
 
-        // Consulta para obtener los documentos relacionados con los roles de administrador y vendedor
-        $stmDocumentos = $conectar->prepare("SELECT documento FROM usuarios WHERE id_rol IN ('1 administrador', '3 vendedor')");
-        $stmDocumentos->execute();
-        $documentos = $stmDocumentos->fetchAll(PDO::FETCH_ASSOC);
+// Consulta para obtener los documentos relacionados con los roles de administrador y vendedor
+$stmDocumentos = $conectar->prepare("SELECT documento FROM usuarios WHERE id_rol IN ('1 administrador', '3 vendedor')");
+$stmDocumentos->execute();
+$documentos = $stmDocumentos->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmembalaje = $conectar->prepare("SELECT id_embala, embalaje FROM embalaje");
-        $stmembalaje->execute();
-        $embalaje = $stmembalaje->fetchAll(PDO::FETCH_ASSOC);
+$stmembalaje = $conectar->prepare("SELECT id_embala, embalaje FROM embalaje");
+$stmembalaje->execute();
+$embalaje = $stmembalaje->fetchAll(PDO::FETCH_ASSOC);
 
-        if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
-            $nom_produc = $_POST['nom_produc'];
-            $descrip = $_POST['descrip'];
-            $precio_compra = $_POST['precio_compra'];
-            $disponibles = $_POST['disponibles'];
-            $id_categoria = $_POST['id_categoria'];
-            $cantidad = $_POST['cantidad'];
-            $id_embala = $_POST['id_embala'];
+if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
+    $nom_produc = $_POST['nom_produc'];
+    $descrip = $_POST['descrip'];
+    $precio_compra = $_POST['precio_compra'];
+    $disponibles = $_POST['disponibles'];
+    $id_categoria = $_POST['id_categoria'];
+    $cantidad = $_POST['cantidad'];
+    $id_embala = $_POST['id_embala'];
 
-            // Verifica si se ha enviado un archivo
-            if (!empty($_FILES['foto']['name'])) {
-                $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-                $nombre = "producto_" . time();
-                $foto_nombre = $nombre . "." . $extension;
-                $ruta_destino = "../../../../assets/img/img_produc/$foto_nombre";
+    // Verifica si se ha enviado un archivo
+    if (!empty($_FILES['foto']['name'])) {
+        $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+        $nombre = "producto_" . time();
+        $foto_nombre = $nombre . "." . $extension;
+        $ruta_destino = "../../../../assets/img/img_produc/$foto_nombre";
 
-                // Mueve el archivo a la ruta de destino
-                move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
-            } else {
-                // Si no se envió un archivo, muestra un mensaje de error y redirige
-                echo '<script>alert("No se ha seleccionado una imagen"); window.location="index.php"</script>';
-                exit(); // Detiene la ejecución del script
-            }
+        // Mueve el archivo a la ruta de destino
+        move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
+    } else {
+        // Si no se envió un archivo, muestra un mensaje de error y redirige
+        echo '<script>alert("No se ha seleccionado una imagen"); window.location="index.php"</script>';
+        exit(); // Detiene la ejecución del script
+    }
 
-            $precio_ven = $_POST['precio_ven'];
-            $documento = $_POST['documento'];
+    $precio_ven = $_POST['precio_ven'];
+    $documento = $_POST['documento'];
 
-            $validar = $conectar->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
-            $validar->execute();
-            $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
+    $validar = $conectar->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
+    $validar->execute();
+    $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $disponibles == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto_nombre == "" || $precio_ven == "" || $documento == "") {
-                echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
-                echo '<script> window.location="./crear.php"</script>';
-            } else {
-                $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,disponibles,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra', '$disponibles','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
-                $insertsql->execute();
-                echo '<script>alert("Registro Exitoso");</script>';
-                echo '<script> window.location="index.php"</script>';
-            }
-        }
-        ?>
+    if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $disponibles == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto_nombre == "" || $precio_ven == "" || $documento == "") {
+        echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
+        echo '<script> window.location="./crear.php"</script>';
+    } else {
+        $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,disponibles,id_categoria,cantidad,id_embala,foto,precio_ven,documento) VALUES ( '$nom_produc','$descrip', '$precio_compra', '$disponibles','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento');");
+        $insertsql->execute();
+        echo '<script>alert("Registro Exitoso");</script>';
+        echo '<script> window.location="index.php"</script>';
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">

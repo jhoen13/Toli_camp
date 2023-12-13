@@ -145,6 +145,11 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/main.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+     <!-- FAVICONS ICON -->
+     <link rel="shortcut icon" type="image/png" href="../../../assets/img/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/stylelo.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -213,51 +218,17 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
 </head>
 
 <body>
-    <div class="navbar-lateral full-reset">
-        <div class="visible-xs font-movile-menu mobile-menu-button"></div>
-        <div class="full-reset container-menu-movile custom-scroll-containers">
-            <div class="logo full-reset all-tittles">
-            </div>
-            <div class="full-reset" style="padding: 10px 0; color:#fff;">
-                <p class="text-center" style="padding-top: 15px;">Menu</p>
-            </div>
-            <div class="dropdown-menu-button">&nbsp;&nbsp; Compras</div>
-            <ul class="list-unstyled">
-                <li><a href="compras.php">&nbsp;&nbsp; Nueva compra</a></li>
-                <li><a href="miscompras.php">&nbsp;&nbsp; Mis compras</a></li>
-            </ul>
-            </li>
-            <li>
-                <div class="dropdown-menu-button">&nbsp;&nbsp; Ventas</div>
-                <ul class="list-unstyled">
-                    <li><a href="ventas.php">&nbsp;&nbsp; Nueva venta</a></li>
-                    <li><a href="misventas.php">&nbsp;&nbsp; Mis ventas</a></li>
-                </ul>
-            </li>
-            <li><a href="inventario.php">&nbsp;&nbsp; Inventario</a></li>
-            <li><a href="reporte.php">&nbsp;&nbsp; Reportes</a></li>
-            </ul>
-        </div>
-    </div>
-    </div>
+    
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-9 col-md-8 content-page-container full-reset custom-scroll-containers">
-                <div class="container">
-                    <br>
-                </div>
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 lead">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active">Nueva venta</li>
-                                <li class="breadcrumb-item"><a href="listaven.php">Listado de ventas</a></li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid">
+                <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
+                    <a href="index-distriMayo.php" style="color: #0097B2;" class="d-flex align-items-center">
+                        <i class="fas fa-arrow-left mr-2 fa-2x"></i>
+                    </a>
+                </button>
                     <div class="container-flat-form">
                         <div class="title-flat-form title-flat-blue">Nueva venta</div>
                         <form action="ventas.php" method="post" class="row">
@@ -267,8 +238,9 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                     <select class="form-control" name="producto" id="producto" required>
                                         <option value="" disabled selected>SELECCIONE PRODUCTO</option>
                                         <?php
-                                        $sql_products = $con->prepare("SELECT * FROM productos");
-                                        $sql_products->execute();
+                                        $sql_productos_usuario = $con->prepare("SELECT * FROM productos WHERE documento = ?");
+                                        $sql_productos_usuario->execute([$docu_distri_mino]);
+                                        $sql_products = $sql_productos_usuario->fetchAll(PDO::FETCH_ASSOC);
                                         foreach ($sql_products as $fila) {
                                         ?>
                                             <option value="<?php echo ($fila['id_producto']) ?>"><?php echo ($fila['nom_produc']) ?></option>
@@ -311,7 +283,7 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                     <select class="form-control" name="usuario" id="usuario" required>
                                         <option value="" disabled selected>SELECCIONE USUARIO</option>
                                         <?php
-                                        $sql_users = $con->prepare("SELECT * FROM usuarios WHERE id_rol=3");
+                                        $sql_users = $con->prepare("SELECT * FROM usuarios WHERE id_rol IN (2, 3)");
                                         $sql_users->execute();
                                         foreach ($sql_users as $user) {
                                         ?>
@@ -320,10 +292,6 @@ if (isset($_POST['terminar_venta']) && isset($_SESSION['carrito']) && count($_SE
                                         };
                                         ?>
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="id_venta">ID Venta</label>
-                                    <input class="form-control" name="id_venta" type="text" placeholder="Ingrese el ID de la venta" required>
                                 </div>
                                 <button type="submit" name="terminar_venta" class="btn btn-success">Terminar Venta</button>
                             </form>

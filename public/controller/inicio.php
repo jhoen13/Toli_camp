@@ -93,7 +93,7 @@ if (isset($_POST["btn-ingresar"])) {
                     $redirectLocation = "../views/models/distri_mino/index-vende.php";
                     break;
                 case 4:
-                    $redirectLocation = "../views/models/distri_mayo/index-distriMayo.php";
+                    $redirectLocation = "../views/models/distri_mayo/producto/index.php";
                     break;
                 default:
                     header("Location:../views/auth/error_lo.php");

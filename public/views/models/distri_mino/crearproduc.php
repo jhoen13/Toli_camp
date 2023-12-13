@@ -25,6 +25,10 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $id_categoria = $_POST['id_categoria'];
     $cantidad = $_POST['cantidad'];
     $id_embala = $_POST['id_embala'];
+    if (isset($_POST['nom_produc']) && isset($_POST['codigo_barras'])) {
+        $nom_produc = trim($_POST['nom_produc']);
+        $codigo_barras = trim($_POST['codigo_barras']);
+    }
 
     // Verifica si se ha enviado un archivo
     if (!empty($_FILES['foto']['name'])) {
@@ -43,38 +47,26 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
 
     $precio_ven = $_POST['precio_ven'];
     $documento = $_POST['documento'];
-    $barcode = $_POST['barcode']; // Nuevo campo de código de barras
+    $codigo_barras = $_POST['codigo_barras']; // Nuevo campo de código de barras
 
     $validar = $conectar->prepare("SELECT * FROM productos WHERE nom_produc = '$nom_produc'");
     $validar->execute();
     $filaa1 = $validar->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($nom_produc == "" || $descrip == "" || $precio_compra == "" || $id_categoria == "" || $cantidad == "" || $id_embala == "" || $foto == "" || $precio_ven == "" || $documento == "" || $barcode == "") {
+    if ($nom_produc == "") {
         echo '<script> alert ("EXISTEN DATOS VACÍOS");</script>';
         echo '<script> window.location="producto.php"</script>';
     } else {
-        $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,id_categoria,cantidad,id_embala,foto,precio_ven,documento,barcode) VALUES ('$nom_produc','$descrip', '$precio_compra','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento','$barcode');");
+        $insertsql = $conectar->prepare("INSERT INTO productos( nom_produc, descrip, precio_compra,id_categoria,cantidad,id_embala,foto,precio_ven,documento,codigo_barras) VALUES ('$nom_produc','$descrip', '$precio_compra','$id_categoria','$cantidad','$id_embala','$foto_nombre','$precio_ven','$documento','$codigo_barras');");
         $insertsql->execute();
         echo '<script>alert("Registro Exitoso");</script>';
         echo '<script> window.location="index-vende.php"</script>';
-        // Obtener el último ID insertado
-        $id = $pdo->lastInsertId();
-
-        // Generar código con el último ID y milisegundos
-        $codigo = $id . date('is');
-
-        // Actualizar el producto con el código generado
-        $actualizarCodigo = $pdo->prepare("UPDATE productos SET barcode = :codigo WHERE id_producto = :id");
-        $actualizarCodigo->bindParam(':barcode', $barcode, PDO::PARAM_STR);
-        $actualizarCodigo->bindParam(':id', $id, PDO::PARAM_INT);
-        $actualizarCodigo->execute();
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,13 +74,9 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <link rel="shortcut icon" href="../../../controller/img/icono.png" type="image/x-icon">
     <title>Formulario de creación de productos</title>
 </head>
-
 <body>
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="">
-                <a href="./listado-prod.php" class="btn btn-primary btn-margin">Volver</a>
-            </div>
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Crear Un Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -145,39 +133,74 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
                     </select>
                 </div>
                 <div class="modal-body">
-                    <label for="barcode">Codigo de barras</label>
-                    <input id="barcode" type="number" class="form-control" name="barcode" placeholder="Ingresa el codigo de barras">
+                    <label for="codigo_barras">Código de Barras</label>
+                    <input id="codigo_barras" type="text" class="form-control" name="codigo_barras" placeholder="Ingresa el código de barras">
                 </div>
                 <input type="submit" class="btn btn-success" value="Crear producto">
                 <input type="hidden" name="registro" value="formu">
+                <div class="modal-footer"><a href="index-vende.php" class="btn btn-primary btn-margin">Volver</a>
+                </div>
             </form>
         </div>
     </div>
 </body>
-
 </html>
 
-<script src="JsBarcode.all.min.js"></script>
 <script type="text/javascript">
-    function arrayjsonbarcode(j) {
-        json = JSON.parse(j);
-        arr = [];
-        for (var x in json) {
-            arr.push(json[x]);
-        }
-        return arr;
-    }
+	$(function(){
+		$('#registro').click(function(e){
 
-    jsonvalor = '<?php echo json_encode($arrayCodigos); ?>';
-    valores = arrayjsonbarcode(jsonvalor);
+			var valid = this.form.checkValidity();
 
-    for (var i = 0; i < valores.length; i++) {
-        JsBarcode("#barcode" + valores[i], valores[i].toString(), {
-            format: "CODE128", // Cambiado a CODE128, ajusta el formato según tus necesidades
-            lineColor: "#000",
-            width: 2,
-            height: 30,
-            displayValue: true
-        });
-    }
+			if(valid){
+
+            var nombre = $('#nom_produc').val();
+			var codigo = $('#codigo_barras').val();		
+
+				e.preventDefault();	
+
+				$.ajax({
+					type: 'POST',
+					data: {nom_produc: nom_produc, codigo_barras: codigo_barras},
+					success: function(data){
+					Swal.fire({
+								'title': '¡Mensaje!',
+								'text': data,
+                                'icon': 'success',
+                                'showConfirmButton': 'false',
+                                'timer': '1500'
+								}).then(function() {
+                window.location = "index.php";
+            });
+							
+					} ,
+                    
+					error: function(data){
+						Swal.fire({
+								'title': 'Error',
+								'text': data,
+								'icon': 'error'
+								})
+					}
+				});
+
+				
+			}else{
+				
+			}
+
+			
+
+
+
+		});		
+
+		
+	});
+    
+	
 </script>
+
+
+<script src="../js/sweetalert2.all.js"></script>
+<script src="../js/sweetalert2.all.min.js"></script>

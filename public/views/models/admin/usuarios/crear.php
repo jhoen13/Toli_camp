@@ -217,7 +217,7 @@ if (isset($_POST["btn-registrar"])) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -380,7 +380,7 @@ if (isset($_POST["btn-registrar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../categoria/index.php">Lista Categorias</a></li>
-                            <li><a href="../categoria/crear.php">crear Categorias</a></li>
+                            <li><a href="../categoria/crear.php">Crear Categorias</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE DOCUMENTOS -->
@@ -390,7 +390,7 @@ if (isset($_POST["btn-registrar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../documentos/index.php">Lista Documentos</a></li>
-                            <li><a href="../documentos/crear.php">crear Documentos</a></li>
+                            <li><a href="../documentos/crear.php">Crear Documentos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE EMBALAJE -->
@@ -400,7 +400,7 @@ if (isset($_POST["btn-registrar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../embalaje/index.php">Listar Embalaje</a></li>
-                            <li><a href="../embalaje/crear.php">crear Embalaje</a></li>
+                            <li><a href="../embalaje/crear.php">Crear Embalaje</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE GENEROS -->
@@ -410,7 +410,7 @@ if (isset($_POST["btn-registrar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../genero/index.php">Lista Generos</a></li>
-                            <li><a href="../genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->
@@ -419,8 +419,8 @@ if (isset($_POST["btn-registrar"])) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../producto/producto.php">Lista Productos</a></li>
-                            <li><a href="../producto/crear.php">crear Productos</a></li>
+                            <li><a href="../producto/index.php">Lista Productos</a></li>
+                            <li><a href="../producto/crear.php">Crear Productos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ROLES -->
@@ -431,7 +431,7 @@ if (isset($_POST["btn-registrar"])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../roles/index.php">Lista Roles</a></li>
-                            <li><a href="../roles/crear.php">crear Roles</a></li>
+                            <li><a href="../roles/crear.php">Crear Roles</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE ESTADISTICAS

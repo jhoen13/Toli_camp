@@ -8,10 +8,21 @@ $con = $db->conectar();
 if (isset($_SESSION['document'])) {
     $nombreUsuario = $_SESSION['document'];
     $mensajeBienvenida = "Bienvenido, $nombreUsuario!";
+
+    $documento = $_SESSION['document'];
+
+    // Corrige la consulta SQL
+    $sql = $con->prepare("SELECT * FROM usuarios AS u
+        JOIN roles AS r ON u.id_rol = r.id_rol
+        WHERE u.documento = :documento");
+    $sql->bindParam(":documento", $documento, PDO::PARAM_STR);
+    $sql->execute();
+    $usua = $sql->fetch();
 } else {
-    // Redirigir a la página de inicio de sesión si no ha iniciado sesión
-    header("Location: index.php");
-    exit();
+    // Manejar el caso en el que la sesión no esté iniciada 
+    echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
+    echo '<script>window.location="../../auth/login.php"</script>';
+    exit(); // Agrega un exit() para detener la ejecución del script en este punto
 }
 
 // Obtener todas las categorías
@@ -54,6 +65,31 @@ if ($id_categoria !== null && $id_categoria !== '') {
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
         }
 
         .container {
@@ -152,8 +188,13 @@ if ($id_categoria !== null && $id_categoria !== '') {
 </head>
 
 <body>
+    <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="./perfil.php">Mi Perfil</a>
+        <a href="./compras.php">Compra</a>
+    </nav>
     <div class="container">
-        <h2>Filtrar Productos por Categoría</h2>
+        <h2>Productos</h2>
 
         <!-- Mostrar mensaje de bienvenida -->
         <p><?php echo $mensajeBienvenida; ?></p>
@@ -179,7 +220,6 @@ if ($id_categoria !== null && $id_categoria !== '') {
                         // Construir la ruta relativa de la imagen
                         $imagen = $producto['foto'];
                         $ruta_relativa = '../../../assets/img/img_produc/' . $imagen;
-                        
 
                         if (file_exists($ruta_relativa)) {
                         ?>
@@ -189,11 +229,12 @@ if ($id_categoria !== null && $id_categoria !== '') {
                         <?php } ?>
 
                         <div class="product-info">
+                            <h4>Codigo: <?php echo $producto['id_producto']; ?></h4>
                             <h4><?php echo $producto['nom_produc']; ?></h4>
                             <p><?php echo $producto['descrip']; ?></p>
+                            <p>Cantidad: <?php echo $producto['cantidad']; ?></p>
                             <p>Precio: $<?php echo $producto['precio_ven']; ?></p>
-                            <p>Código de Barras: <?php echo $producto['codigo_barras']; ?></p>
-                            <a href="ventas.php?id=<?php echo $producto['id_producto']; ?>" class="buy-button">Comprar</a>
+                            <img src="barcode.php?text=<?php echo $producto['barcode'] ?>&size=40&codetype=Code128&print=true" />
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -210,18 +251,12 @@ if ($id_categoria !== null && $id_categoria !== '') {
     <!-- Botón fijo para cerrar sesión -->
     <button class="fixed-button" onclick="cerrarSesion()">Cerrar Sesión</button>
 
-    <!-- Botón de redirección -->
-    <button class="redirect-button" onclick="redireccionar()">Ir a Otra Página</button>
-
-    <button class="redirect-button" onclick="redire()">Editar datos</button>
-
-
     <script>
         // Función para cerrar la sesión
         function cerrarSesion() {
             // Realiza cualquier lógica necesaria para cerrar la sesión, por ejemplo, limpiar variables de sesión
             // Después redirige a la página de inicio de sesión
-            window.location.href = "index.html";
+            window.location.href = "../../../../index.html";
         }
 
         // Función para redireccionar
@@ -235,6 +270,10 @@ if ($id_categoria !== null && $id_categoria !== '') {
             window.location.href = "perfil.php";
         }
     </script>
+</body>
+
+</html>
+
 </body>
 
 </html>

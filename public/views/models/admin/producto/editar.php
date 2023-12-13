@@ -1,18 +1,19 @@
 <?php
-session_start(); // Iniciar la sesión
+// Iniciar la sesión
+session_start();
 
-// Se importa el archivo de conexión a la base de datos
+// Incluir el archivo de conexión a la base de datos
 require_once("../../../../db/conexion.php");
 
-// Se instancia la clase Database para la conexión a la base de datos
+// Instanciar la clase Database para la conexión a la base de datos
 $db = new database();
 $conexion = $db->conectar();
 
-// Asegúrate de que la sesión esté iniciada y que 'document' esté definida
+// Asegurarse de que la sesión esté iniciada y que 'document' esté definida
 if (isset($_SESSION['document'])) {
     $documento = $_SESSION['document'];
 
-    // Corrige la consulta SQL
+    // Corregir la consulta SQL
     $sql = $conexion->prepare("SELECT * FROM usuarios AS u
         JOIN roles AS r ON u.id_rol = r.id_rol
         WHERE u.documento = :documento");
@@ -23,7 +24,7 @@ if (isset($_SESSION['document'])) {
     // Manejar el caso en el que la sesión no esté iniciada 
     echo "<script>alert('La sesión no está iniciada, Redirigiendo...');</script>";
     echo '<script>window.location="../../auth/login.php"</script>';
-    exit(); // Agrega un exit() para detener la ejecución del script en este punto
+    exit(); // Agregar un exit() para detener la ejecución del script en este punto
 }
 
 // Cierre de sesión al presionar 'btncerrar'
@@ -37,18 +38,18 @@ if (isset($_POST['btncerrar'])) {
     // Consulta para obtener la fecha de ingreso y el código de ingreso; se trae el último registro de la tabla
     $consulta2 = $conexion->prepare("SELECT fecha_ingre, hora_ingre, codi_ingre FROM ingreso WHERE documento = :documento ORDER BY id_ingreso DESC LIMIT 1");
     $consulta2->execute([':documento' => $documento]);
-    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obteniendo el resultado de la consulta
+    $resultado = $consulta2->fetch(PDO::FETCH_ASSOC); // Obtener el resultado de la consulta
 
-    $fecha_ingreso = $resultado['fecha_ingre'];  // Obteniendo la fecha de ingreso de la tabla
-    $hora_ingreso = $resultado['hora_ingre'];  // Obteniendo la hora de ingreso de la tabla
-    $codi_ingre = $resultado['codi_ingre']; // Obteniendo código de ingreso
+    $fecha_ingreso = $resultado['fecha_ingre'];  // Obtener la fecha de ingreso de la tabla
+    $hora_ingreso = $resultado['hora_ingre'];  // Obtener la hora de ingreso de la tabla
+    $codi_ingre = $resultado['codi_ingre']; // Obtener código de ingreso
 
     // Calcular duración teniendo en cuenta la "fecha_ingreso" y "fecha_salida"
     $diferencia = strtotime("$fecha_salida $hora_salida") - strtotime("$fecha_ingreso $hora_ingreso");
-    // diferencia en segundos se utiliza para calcular la duración formatada
+    // Diferencia en segundos se utiliza para calcular la duración formateada
     $duracion = gmdate('H:i:s', $diferencia); // Formato de duración en horas:minutos:segundos
 
-    // se realiza el update a la tabla iongreso calculando la duración del usuario en la pagina
+    // Se realiza el update a la tabla ingreso calculando la duración del usuario en la página
     $consulta3 = $conexion->prepare("UPDATE ingreso SET fecha_sali = :fecha_salida, hora_sali = :hora_salida, durac = :duracion WHERE documento = :documento AND codi_ingre = :codi_ingre");
     $consulta3->bindParam(":fecha_salida", $fecha_salida);
     $consulta3->bindParam(":hora_salida", $hora_salida);
@@ -61,7 +62,7 @@ if (isset($_POST['btncerrar'])) {
     header("Location:../../../../../index.html");
 }
 
-// Obtiene el documento de la sesión del usuario
+// Obtener el documento de la sesión del usuario
 $document = $_SESSION['document'];
 
 // Consulta SQL para obtener la información del usuario logueado
@@ -73,7 +74,6 @@ $respuesta = $user->fetch(PDO::FETCH_ASSOC);
 $userEntry = $conexion->prepare("SELECT * FROM ingreso INNER JOIN usuarios INNER JOIN roles ON ingreso.documento = usuarios.documento AND usuarios.id_rol = roles.id_rol WHERE roles.id_rol >= 1 ORDER BY ingreso.id_ingreso DESC LIMIT 10");
 $userEntry->execute();
 $entry = $userEntry->fetchAll(PDO::FETCH_ASSOC);
-
 
 $stmCategorias = $conexion->prepare("SELECT id_categoria, categoria FROM categoria");
 $stmCategorias->execute();
@@ -106,6 +106,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     $precio_ven = $_POST['precio_ven'];
     $documento = $_POST['documento'];
 
+    // Verifica si se ha enviado un archivo
     if (!empty($_FILES['foto']['name'])) {
         $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
         $nombre = "producto_" . time();
@@ -115,9 +116,8 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
         // Mueve el archivo a la ruta de destino
         move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino);
     } else {
-        // Si no se envió un archivo, muestra un mensaje de error y redirige
-        echo '<script>alert("No se ha seleccionado una imagen"); window.location="index.php"</script>';
-        exit(); // Detiene la ejecución del script
+        // Si no se envió un archivo, utiliza el nombre de la imagen existente
+        $foto_nombre = $producto['foto']; // Obtén el nombre actual de la imagen
     }
 
     $updatesql = $conexion->prepare("UPDATE productos SET nom_produc = :nom_produc, descrip = :descrip, precio_compra = :precio_compra, id_categoria = :id_categoria, cantidad = :cantidad, id_embala = :id_embala, foto = :foto, precio_ven = :precio_ven, documento = :documento WHERE id_producto = :id_producto");
@@ -141,6 +141,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     echo '<script> window.location="./index.php"</script>';
 }
 ?>
+
 
 
 
@@ -210,7 +211,7 @@ if ((isset($_POST["registro"])) && ($_POST["registro"] == "formu")) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>

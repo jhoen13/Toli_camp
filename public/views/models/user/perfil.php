@@ -46,9 +46,13 @@ if (isset($_SESSION['document'])) {
         $mensajeExito = '¡Actualización exitosa!';
 
         // Redirigir a la página principal después de un breve retraso
-        header("refresh:3;url=index-user.php");
+        header("refresh:1;url=index-user.php");
     }
 }
+$consultaGenero = $con->prepare("SELECT * FROM genero");
+$consultaGenero->execute();
+$generos = $consultaGenero->fetchAll();
+
 ?>
 
 <!DOCTYPE html>
@@ -56,6 +60,13 @@ if (isset($_SESSION['document'])) {
 
 <head>
     <title>Editar Perfil</title>
+    <title>User <?php echo $respuesta['nombre'] ?></title>
+    <!-- FAVICONS ICON -->
+    <link rel="shortcut icon" type="image/png" href="../../../assets/img/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/stylelo.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -135,6 +146,11 @@ if (isset($_SESSION['document'])) {
 
 <body>
     <div class="container">
+        <button type="submit" class="btn btn-re btn-xl sharp" style="padding: 5px 10px; font-size: 12px;"> 
+            <a href="index-user.php" style="color: #0097B2;" class="d-flex align-items-center">
+                <i class="fas fa-arrow-left mr-2 fa-2x"></i>
+            </a>
+        </button>
         <h2>Editar Perfil</h2>
 
         <?php if (!empty($mensajeExito)) : ?>
@@ -163,19 +179,22 @@ if (isset($_SESSION['document'])) {
                 <label for="direccion">Dirección:</label>
                 <input type="text" id="direccion" name="direccion" value="<?php echo $usuario['direccion']; ?>" required>
 
-                <label for="genero">Género:</label>
-                <select id="genero" name="id_genero" required>
-                    <option value="Masculino" <?php echo ($usuario['id_genero'] == 'Masculino') ? 'selected' : ''; ?>>Masculino</option>
-                    <option value="Femenino" <?php echo ($usuario['id_genero'] == 'Femenino') ? 'selected' : ''; ?>>Femenino</option>
-                    <option value="Otro" <?php echo ($usuario['id_genero'] == 'Otro') ? 'selected' : ''; ?>>Otro</option>
+                <label for="id_genero">Género:</label>
+                <select name="id_genero" class="form-control" required>
+                    <option value="" disabled>Seleccione tipo de genero</option>
+                    <?php foreach ($generos as $genero) : ?>
+                        <option value="<?= $genero['id_genero'] ?>" <?= ($genero['id_genero'] == $usuario['id_genero']) ? 'selected' : '' ?>>
+                            <?= $genero['genero'] ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
 
-                <input type="submit" class="boton" value="Guardar Cambios">
+                <input type="submit" class="boton" value="Guardar Cambios" style="background-color: #0097B2; color: #ffff;">
             </form>
         <?php else : ?>
             <p>No se encontraron datos de usuario.</p>
         <?php endif; ?>
     </div>
 </body>
-
 </html>
+

@@ -193,18 +193,15 @@ if ($id_categoria !== null && $id_categoria !== '') {
         <a href="./clientes.php">Clientes</a>
         <a href="./listado-prod.php">Productos</a>
         <a href="./ventas.php">Ventas</a>
+        <a href="./compras.php">Compras</a>
         <a href="./reporteventa.php">Reporte ventas</a>
-        <a href="./compras.php">Compra</a>
+        <a href="./perfil.php">Mi Perfil</a>
     </nav>
     <div class="container">
         <h2>Filtrar Productos por Categoría</h2>
 
         <!-- Mostrar mensaje de bienvenida -->
         <p><?php echo $mensajeBienvenida; ?></p>
-
-        <!-- Botón de redirección -->
-        <button class="redirect-button" onclick="redireccionar()">Ir a Otra Página</button>
-        <button class="redirect-button" onclick="redire()">Editar datos</button>
 
         <form method="post" action="">
             <label for="categoria">Seleccionar Categoría:</label>
@@ -242,7 +239,7 @@ if ($id_categoria !== null && $id_categoria !== '') {
                             <p>Cantidad: <?php echo $producto['cantidad']; ?></p>
                             <p>Precio: $<?php echo $producto['precio_ven']; ?></p>
                             <img src="barcode.php?text=<?php echo $producto['barcode'] ?>&size=40&codetype=Code128&print=true" />
-                            <br><br><a href="ventas.php?id=<?php echo $producto['id_producto']; ?>" class="buy-button">Comprar</a>
+
                         </div>
                     </div>
                 <?php endforeach; ?>

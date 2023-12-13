@@ -167,7 +167,7 @@ foreach ($embalajes as $embalaje) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -449,6 +449,7 @@ foreach ($embalajes as $embalaje) {
                                                 <th scope="col">Cantidad</th>
                                                 <th scope="col">Embalaje</th>
                                                 <th scope="col">Foto</th>
+                                                <th scope="col">Codigo De barras</th>
                                                 <th scope="col">Precio Venta</th>
                                                 <th colspan="2">Acciones</th>
                                             </tr>
@@ -466,6 +467,9 @@ foreach ($embalajes as $embalaje) {
                                                     <td scope="row"><?php echo $producto['cantidad']; ?></td> 
                                                     <td scope="row"><?php echo $embalajesMap[$producto['id_embala']]; ?></td>
                                                     <td><img src="../../../../assets/img/img_produc/<?= $producto["foto"] ?>" alt="" style="width: 75px;"></td>
+                                                    <td>
+                                                        <img src="barcode.php?text=<?php echo $producto['barcode']?>&size=40&codetype=Code128&print=true" />
+                                                    </td> 
                                                     <td scope="row">$ <?php echo $producto['precio_ven']; ?></td>
                                                     <td>
                                                     <td>

@@ -152,7 +152,7 @@ if (isset($_GET['id_categoria'])) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -345,7 +345,7 @@ if (isset($_GET['id_categoria'])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../genero/index.php">Lista Generos</a></li>
-                            <li><a href="../genero/crear.php">crear Generos</a></li>
+                            <li><a href="../genero/crear.php">Crear Generos</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE PRODUCTOS -->

@@ -160,7 +160,7 @@ foreach ($embalajes as $embalaje) {
     <script>
         function agregarProducto() {
             // Redirigir a la página para agregar producto
-            window.location.href = "crearproduc.php";
+            window.location.href = "crear.php";
         }
         function volver() {
             // Redirigir a la página anterior

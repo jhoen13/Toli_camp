@@ -150,7 +150,7 @@ if (isset($_GET['id_tipdocu'])) {
     <div id="main-wrapper">
         <!--****** Nav header start ***********-->
         <div class="nav-header">
-            <a href="./index-admin.php" class="brand-logo">
+            <a href="../index-admin.php" class="brand-logo">
                 <img src="../../../../assets/img/logo.png" style="border-radius: 20px; width: 600px;" alt="logo Toli-Camp" class="logo-abbr">
                 <div class="brand-title">
                     <h2 class="">Bienvenid@</h2>
@@ -333,7 +333,7 @@ if (isset($_GET['id_tipdocu'])) {
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="../embalaje/index.php">Listar Embalaje</a></li>
-                            <li><a href="../embalaje/crear.php">crear Embalaje</a></li>
+                            <li><a href="../embalaje/crear.php">Crear Embalaje</a></li>
                         </ul>
                     </li>
                     <!-- MODULO DE GENEROS -->
@@ -352,7 +352,7 @@ if (isset($_GET['id_tipdocu'])) {
                             <span class="nav-text">PRODUCTOS</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="../producto/producto.php">Lista Productos</a></li>
+                            <li><a href="../producto/index.php">Lista Productos</a></li>
                             <li><a href="../producto/crear.php">Crear Productos</a></li>
                         </ul>
                     </li>

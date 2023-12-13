@@ -320,7 +320,6 @@ $entra = $user_log->fetchAll(PDO::FETCH_ASSOC);
                             <li><a href="./producto/index.php">Listar Productos</a></li>
                             <li><a href="./producto/crear.php">crear Productos</a></li>
                         </ul>
-                    </li>
                     <!-- MODULO DE ROLES -->
                     <li>
                         <a class="has-arrow " href="javascript:void()" aria-expanded="false">
